@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CropPdfPdf - Free Online PDF Crop, Merge, Split, Edit & Delete Pages</title>
-    <meta name="description" content="Free online PDF tools on CropPdfPdf to crop margins, merge, split, edit, and delete PDF pages easily. Fast, secure, client-side processing. Created by Jaydev Hariyani.">
-    <meta name="keywords" content="CropPdfPdf, PDF crop, PDF merge, PDF split, edit PDF, delete PDF pages, free PDF tools, Jaydev Hariyani">
+    <title>CropPdfPdf - Free Online Interactive PDF Cropper & E-commerce Document Editor</title>
+    <meta name="description" content="Use CropPdfPdf to interactively crop PDF pages with custom custom selection boxes. Perfect for preparing documents and images for Amazon, Myntra, Ajio, and other e-commerce seller portals. 100% secure client-side tool created by Jaydev Hariyani.">
+    <meta name="keywords" content="CropPdfPdf, interactive PDF crop, custom PDF cropper, PDF resize for Amazon Myntra Ajio, delete PDF pages, merge split PDF, free PDF tools, Jaydev Hariyani, Surat">
     <meta name="author" content="Jaydev Hariyani">
     
-    <!-- Google AdSense Placeholder -->
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
-                extend: {
-                    colors: { primary: '#4f46e5', secondary: '#4338ca' }
-                }
+                extend: { colors: { primary: '#4f46e5', secondary: '#4338ca' } }
             }
         }
     </script>
     
-    <!-- FontAwesome -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Cropper.js for Interactive Box Selection -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <!-- PDF-Lib & PDF.js -->
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -50,7 +52,7 @@
                 </div>
                 <div class="flex flex-col">
                     <span class="text-xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent tracking-tight">CropPdfPdf</span>
-                    <span class="text-[10px] text-gray-400 font-medium tracking-widest uppercase -mt-1">Free PDF Tools</span>
+                    <span class="text-[10px] text-gray-400 font-medium tracking-widest uppercase -mt-1">E-commerce PDF Cropper</span>
                 </div>
             </div>
             <nav class="hidden md:flex space-x-6 text-sm font-medium">
@@ -77,78 +79,90 @@
         </div>
     </header>
 
-    <!-- Main -->
+    <!-- Main Container -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- AdSense Ad Slot -->
         <div class="mb-6 bg-gray-200 border border-dashed border-gray-400 rounded-lg p-4 text-center text-sm text-gray-500">
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             <span>Advertisement</span>
         </div>
 
-        <!-- HOME -->
+        <!-- HOME TAB -->
         <div id="tab-home" class="tab-content active text-center py-12">
-            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-4">Welcome to CropPdfPdf</h1>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">Crop margins, merge multiple files, split pages, delete unnecessary pages, and rearrange your PDFs securely right inside your browser.</p>
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-4">Interactive PDF Cropper for E-commerce</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">Crop PDF pages with custom selection boxes. Essential for formatting seller documents, labels, and catalogs for platforms like <strong>Amazon, Myntra, Ajio, Flipkart, and Etsy</strong>.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 <div onclick="switchTab('crop')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 flex flex-col items-center text-center">
                     <div class="bg-indigo-50 text-primary p-4 rounded-full mb-4 text-2xl"><i class="fa-solid fa-crop"></i></div>
-                    <h3 class="font-bold text-lg mb-2">Crop PDF</h3>
-                    <p class="text-sm text-gray-500">Trim margins easily.</p>
+                    <h3 class="font-bold text-lg mb-2">Interactive Crop PDF</h3>
+                    <p class="text-sm text-gray-500">Draw custom crop boxes on PDF pages with live preview.</p>
                 </div>
                 <div onclick="switchTab('merge')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 flex flex-col items-center text-center">
                     <div class="bg-indigo-50 text-primary p-4 rounded-full mb-4 text-2xl"><i class="fa-solid fa-object-ungroup"></i></div>
                     <h3 class="font-bold text-lg mb-2">Merge PDF</h3>
-                    <p class="text-sm text-gray-500">Combine multiple PDFs.</p>
+                    <p class="text-sm text-gray-500">Combine multiple invoices or labels into one file.</p>
                 </div>
                 <div onclick="switchTab('split')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 flex flex-col items-center text-center">
                     <div class="bg-indigo-50 text-primary p-4 rounded-full mb-4 text-2xl"><i class="fa-solid fa-scissors"></i></div>
                     <h3 class="font-bold text-lg mb-2">Split PDF</h3>
-                    <p class="text-sm text-gray-500">Extract pages.</p>
+                    <p class="text-sm text-gray-500">Extract individual pages instantly.</p>
                 </div>
                 <div onclick="switchTab('organizer')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 flex flex-col items-center text-center">
                     <div class="bg-indigo-50 text-primary p-4 rounded-full mb-4 text-2xl"><i class="fa-solid fa-file-pen"></i></div>
-                    <h3 class="font-bold text-lg mb-2">Delete & Edit</h3>
-                    <p class="text-sm text-gray-500">Delete unwanted pages.</p>
+                    <h3 class="font-bold text-lg mb-2">Delete & Edit Pages</h3>
+                    <p class="text-sm text-gray-500">Manage, preview, and remove unwanted pages.</p>
                 </div>
             </div>
         </div>
 
-        <!-- CROP -->
+        <!-- CROP TAB (Interactive Box Cropper) -->
         <div id="tab-crop" class="tab-content bg-white rounded-xl shadow-sm p-6 sm:p-8 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-bold mb-4 flex items-center"><i class="fa-solid fa-crop text-primary mr-3"></i> Crop PDF Margins</h2>
+            <h2 class="text-2xl font-bold mb-2 flex items-center"><i class="fa-solid fa-crop text-primary mr-3"></i> Interactive PDF Cropper</h2>
+            <p class="text-sm text-gray-600 mb-6">Upload your PDF, preview the page, and drag the selection box to crop exactly what you need for Amazon, Myntra, or Ajio portals.</p>
+            
             <div id="crop-dropzone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
                 <input type="file" id="crop-file-input" accept="application/pdf" class="hidden">
                 <i class="fa-solid fa-cloud-arrow-up text-4xl text-primary mb-3"></i>
                 <p class="font-medium text-gray-700">Click to upload PDF or drag and drop here</p>
             </div>
+
             <div id="crop-editor-container" class="hidden mt-6 space-y-6">
                 <div class="flex flex-wrap gap-4 items-center justify-between bg-gray-50 p-4 rounded-lg">
                     <span id="crop-file-name" class="font-medium text-gray-700"></span>
-                    <div class="flex items-center space-x-3">
-                        <label class="text-sm text-gray-600">Margin Cut (%):</label>
-                        <input type="range" id="crop-margin-slider" min="0" max="30" value="5" class="w-32 accent-primary">
-                        <span id="crop-margin-val" class="text-sm font-semibold text-primary">5%</span>
-                    </div>
+                    <div class="text-xs text-gray-500"><i class="fa-solid fa-circle-info mr-1 text-primary"></i> Drag the handles on the image to set your crop boundary.</div>
                 </div>
-                <div class="text-center"><button onclick="processCropPDF()" class="bg-primary hover:bg-secondary text-white font-medium px-6 py-2.5 rounded-lg shadow transition"><i class="fa-solid fa-download mr-2"></i> Apply Crop & Download</button></div>
+                <div class="max-h-[500px] overflow-auto flex justify-center bg-gray-900 rounded-lg p-2">
+                    <img id="crop-preview-image" class="max-w-full" alt="PDF Page Preview">
+                </div>
+                <div class="text-center">
+                    <button onclick="processInteractiveCrop()" class="bg-primary hover:bg-secondary text-white font-medium px-6 py-2.5 rounded-lg shadow transition">
+                        <i class="fa-solid fa-download mr-2"></i> Crop & Download PDF
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- MERGE -->
+        <!-- MERGE TAB -->
         <div id="tab-merge" class="tab-content bg-white rounded-xl shadow-sm p-6 sm:p-8 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-bold mb-4 flex items-center"><i class="fa-solid fa-object-ungroup text-primary mr-3"></i> Merge PDF Files</h2>
+            <h2 class="text-2xl font-bold mb-2 flex items-center"><i class="fa-solid fa-object-ungroup text-primary mr-3"></i> Merge PDF Files</h2>
+            <p class="text-sm text-gray-600 mb-6">Combine seller invoices or shipping labels into a single unified file.</p>
             <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer" onclick="document.getElementById('merge-file-input').click()">
                 <input type="file" id="merge-file-input" accept="application/pdf" multiple class="hidden">
                 <i class="fa-solid fa-file-circle-plus text-4xl text-primary mb-3"></i>
                 <p class="font-medium text-gray-700">Click to upload multiple PDF files</p>
             </div>
             <div id="merge-file-list" class="mt-6 space-y-2"></div>
-            <div id="merge-action-container" class="hidden mt-6 text-center"><button onclick="processMergePDF()" class="bg-primary hover:bg-secondary text-white font-medium px-6 py-2.5 rounded-lg shadow transition"><i class="fa-solid fa-layer-group mr-2"></i> Merge & Download</button></div>
+            <div id="merge-action-container" class="hidden mt-6 text-center">
+                <button onclick="processMergePDF()" class="bg-primary hover:bg-secondary text-white font-medium px-6 py-2.5 rounded-lg shadow transition"><i class="fa-solid fa-layer-group mr-2"></i> Merge & Download</button>
+            </div>
         </div>
 
-        <!-- SPLIT -->
+        <!-- SPLIT TAB -->
         <div id="tab-split" class="tab-content bg-white rounded-xl shadow-sm p-6 sm:p-8 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-bold mb-4 flex items-center"><i class="fa-solid fa-scissors text-primary mr-3"></i> Split PDF Pages</h2>
+            <h2 class="text-2xl font-bold mb-2 flex items-center"><i class="fa-solid fa-scissors text-primary mr-3"></i> Split PDF Pages</h2>
+            <p class="text-sm text-gray-600 mb-6">Extract individual pages from large multi-page PDF documents.</p>
             <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer" onclick="document.getElementById('split-file-input').click()">
                 <input type="file" id="split-file-input" accept="application/pdf" class="hidden">
                 <i class="fa-solid fa-file-arrow-down text-4xl text-primary mb-3"></i>
@@ -156,16 +170,14 @@
             </div>
             <div id="split-options-container" class="hidden mt-6 space-y-4 bg-gray-50 p-4 rounded-lg">
                 <span id="split-file-name" class="font-medium text-gray-700 block"></span>
-                <select id="split-mode" class="border rounded-md px-3 py-1.5 text-sm bg-white">
-                    <option value="all">Extract every page as single PDF</option>
-                </select>
-                <div class="text-center pt-2"><button onclick="processSplitPDF()" class="bg-primary hover:bg-secondary text-white font-medium px-6 py-2.5 rounded-lg shadow transition"><i class="fa-solid fa-scissors mr-2"></i> Split & Download</button></div>
+                <button onclick="processSplitPDF()" class="bg-primary hover:bg-secondary text-white font-medium px-6 py-2.5 rounded-lg shadow transition"><i class="fa-solid fa-scissors mr-2"></i> Split & Download All Pages</button>
             </div>
         </div>
 
-        <!-- ORGANIZER -->
+        <!-- ORGANIZER TAB -->
         <div id="tab-organizer" class="tab-content bg-white rounded-xl shadow-sm p-6 sm:p-8 max-w-5xl mx-auto">
-            <h2 class="text-2xl font-bold mb-4 flex items-center"><i class="fa-solid fa-file-pen text-primary mr-3"></i> Delete & Organize Pages</h2>
+            <h2 class="text-2xl font-bold mb-2 flex items-center"><i class="fa-solid fa-file-pen text-primary mr-3"></i> Delete & Organize Pages</h2>
+            <p class="text-sm text-gray-600 mb-6">Preview thumbnails and click to remove unnecessary pages instantly.</p>
             <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer" onclick="document.getElementById('org-file-input').click()">
                 <input type="file" id="org-file-input" accept="application/pdf" class="hidden">
                 <i class="fa-solid fa-trash-can text-4xl text-primary mb-3"></i>
@@ -180,13 +192,13 @@
             </div>
         </div>
 
-        <!-- ABOUT -->
+        <!-- ABOUT TAB -->
         <div id="tab-about" class="tab-content bg-white rounded-xl shadow-sm p-6 sm:p-10 max-w-4xl mx-auto space-y-6">
             <h2 class="text-3xl font-extrabold text-gray-900">About CropPdfPdf</h2>
-            <p class="text-gray-600 leading-relaxed">CropPdfPdf is built by <strong>Jaydev Hariyani</strong> to manage PDF files securely with 100% client-side browser processing.</p>
+            <p class="text-gray-600 leading-relaxed">CropPdfPdf is developed by <strong>Jaydev Hariyani</strong> to assist e-commerce sellers and professionals with secure, client-side PDF cropping, merging, and document management for portals like Amazon, Myntra, Ajio, and Flipkart.</p>
         </div>
 
-        <!-- CONTACT -->
+        <!-- CONTACT TAB -->
         <div id="tab-contact" class="tab-content bg-white rounded-xl shadow-sm p-6 sm:p-10 max-w-2xl mx-auto">
             <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Contact Us</h2>
             <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-6 mb-6 flex items-center space-x-4">
@@ -219,37 +231,81 @@
         });
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.add('hidden'); }
 
+        // --- INTERACTIVE CROP LOGIC WITH CROPPER.JS ---
         let cropFileBytes = null;
+        let cropperInstance = null;
+        let originalPageWidth = 0;
+        let originalPageHeight = 0;
+
         const cropDropzone = document.getElementById('crop-dropzone');
         const cropFileInput = document.getElementById('crop-file-input');
         cropDropzone.addEventListener('click', () => cropFileInput.click());
+
         cropFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
             cropFileBytes = await file.arrayBuffer();
             document.getElementById('crop-file-name').innerText = file.name;
             document.getElementById('crop-editor-container').classList.remove('hidden');
-        });
-        document.getElementById('crop-margin-slider').addEventListener('input', (e) => {
-            document.getElementById('crop-margin-val').innerText = e.target.value + '%';
+
+            // Render first page as image for interactive cropping
+            const loadingTask = pdfjsLib.getDocument({ data: cropFileBytes });
+            const pdfDoc = await loadingTask.promise;
+            const page = await pdfDoc.getPage(1);
+            const viewport = page.getViewport({ scale: 2.0 }); // High res for cropping
+            
+            originalPageWidth = page.getViewport({ scale: 1.0 }).width;
+            originalPageHeight = page.getViewport({ scale: 1.0 }).height;
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+            const previewImg = document.getElementById('crop-preview-image');
+            previewImg.src = canvas.toDataURL('image/png');
+
+            if (cropperInstance) cropperInstance.destroy();
+            cropperInstance = new Cropper(previewImg, {
+                aspectRatio: NaN,
+                viewMode: 1,
+                autoCropArea: 0.8,
+            });
         });
 
-        async function processCropPDF() {
-            if (!cropFileBytes) return;
+        async function processInteractiveCrop() {
+            if (!cropFileBytes || !cropperInstance) return;
             try {
+                const data = cropperInstance.getData(); // x, y, width, height on rendered image
+                const containerData = cropperInstance.getContainerData();
+                const imageData = cropperInstance.getImageData();
+
+                // Calculate ratio between PDF original points and rendered image pixels
+                const scaleX = originalPageWidth / imageData.naturalWidth;
+                const scaleY = originalPageHeight / imageData.naturalHeight;
+
+                const pdfX = data.x * scaleX;
+                const pdfW = data.width * scaleX;
+                const pdfH = data.height * scaleY;
+                const pdfY = originalPageHeight - (data.y * scaleY) - pdfH; // PDF coordinates start from bottom-left
+
                 const pdfDoc = await PDFLib.PDFDocument.load(cropFileBytes);
-                const marginPercent = parseInt(document.getElementById('crop-margin-slider').value) / 100;
-                pdfDoc.getPages().forEach(page => {
-                    const { width, height } = page.getSize();
-                    const cropW = width * marginPercent;
-                    const cropH = height * marginPercent;
-                    page.setCropBox(cropW, cropH, width - (2 * cropW), height - (2 * cropH));
+                const pages = pdfDoc.getPages();
+
+                pages.forEach(page => {
+                    page.setCropBox(pdfX, pdfY, pdfW, pdfH);
                 });
-                const bytes = await pdfDoc.save();
-                downloadBlob(new Blob([bytes], { type: 'application/pdf' }), 'cropped.pdf');
-            } catch (err) { alert('Error: ' + err.message); }
+
+                const modifiedBytes = await pdfDoc.save();
+                downloadBlob(new Blob([modifiedBytes], { type: 'application/pdf' }), 'cropped_ecommerce_document.pdf');
+            } catch (err) {
+                alert('Error during crop: ' + err.message);
+            }
         }
 
+        // --- MERGE LOGIC ---
         let mergeFilesArray = [];
         document.getElementById('merge-file-input').addEventListener('change', (e) => {
             mergeFilesArray = Array.from(e.target.files);
@@ -270,10 +326,11 @@
                     const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
                     pages.forEach(p => mergedPdf.addPage(p));
                 }
-                downloadBlob(new Blob([await mergedPdf.save()], { type: 'application/pdf' }), 'merged.pdf');
+                downloadBlob(new Blob([await mergedPdf.save()], { type: 'application/pdf' }), 'merged_documents.pdf');
             } catch (err) { alert('Error: ' + err.message); }
         }
 
+        // --- SPLIT LOGIC ---
         let splitFileBytes = null;
         document.getElementById('split-file-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -296,6 +353,7 @@
             } catch (err) { alert('Error: ' + err.message); }
         }
 
+        // --- ORGANIZER LOGIC ---
         let orgFileBytes = null;
         let deletedPagesSet = new Set();
         document.getElementById('org-file-input').addEventListener('change', async (e) => {
@@ -306,7 +364,7 @@
             document.getElementById('org-editor-container').classList.remove('hidden');
             
             const grid = document.getElementById('org-pages-grid');
-            grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-4">Rendering...</p>';
+            grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-4">Rendering thumbnails...</p>';
             deletedPagesSet.clear();
 
             const pdfDocJs = await pdfjsLib.getDocument({ data: orgFileBytes }).promise;
@@ -348,8 +406,8 @@
                 }
                 const newPdf = await PDFLib.PDFDocument.create();
                 const pages = await newPdf.copyPages(pdfDoc, keep);
-                pages.forEach(p => newPdf.addPage(p));
-                downloadBlob(new Blob([await newPdf.save()], { type: 'application/pdf' }), 'edited_document.pdf');
+                pages.pagesCount = pages.forEach(p => newPdf.addPage(p));
+                downloadBlob(new Blob([await newPdf.save()], { type: 'application/pdf' }), 'organized_document.pdf');
             } catch (err) { alert('Error: ' + err.message); }
         }
 
