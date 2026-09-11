@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop PDF Online Free - Remove White Margins & Cut Labels to 4x6 | CropPDFPDF.com</title>
+<meta name="description" content="Free online PDF crop tool for Indian sellers. Crop A4 sheets with multiple labels to 4x6 thermal labels for Amazon, Flipkart, Meesho. No watermark, secure, auto-delete in 1h.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Inter',system-ui;background:#121212;color:#fff}
+canvas{max-width:100%}
+.dashed-box{border:2px dashed #6b7fd0;background:#2f3a6f}
+.pill-active{background:#fff;color:#000;font-weight:600}
+.pill{background:#2a2a2a;color:#9ca3af}
+.pill:hover{background:#3a3a3a;color:#fff}
+.crop-overlay{position:absolute;left:0;top:0;cursor:crosshair}
+</style>
+</head>
+<body>
+<!-- Header -->
+<div class="border-b border-white/10 bg-[#1e1e1e]">
+  <div class="max-w-[1280px] mx-auto px-4 py-2 flex justify-between items-center">
+    <div class="flex items-center gap-2"><div class="w-7 h-7 bg-yellow-400 rounded flex items-center justify-center text-black font-bold">C</div><div><div class="font-bold text-[15px]">CropPDFPDF.com</div><div class="text-[9px] tracking-widest text-white/40 -mt-1">FAST • FREE • NO SIGNUP</div></div></div>
+    <div class="text-[11px] text-white/40 hidden sm:block">Secure & Auto-delete in 1h • Made for India</div>
+  </div>
+</div>
+<!-- Nav Pills -->
+<div class="bg-[#1e1e1e] border-b border-white/10 overflow-x-auto">
+  <div class="max-w-[1280px] mx-auto px-4 py-3 flex gap-2 whitespace-nowrap">
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Merge PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Split PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Resize PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Convert PDF</button>
+    <button class="pill-active px-3 py-1.5 rounded-full text-[12px]">Crop PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Rotate PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Optimize PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Reorder PDF</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Delete pages</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">N-UP</button>
+    <button class="pill px-3 py-1.5 rounded-full text-[12px]">Page numbers</button>
+  </div>
+</div>
+
+<div class="max-w-[1280px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+  <div>
+    <h1 class="text-[22px] sm:text-[28px] font-bold leading-tight">Crop PDF Online Free - Remove White Margins & Cut Labels to 4x6</h1>
+    <p class="text-[13px] text-white/50 mt-2">Free • No signup • Secure - All processing in your browser</p>
+
+    <!-- Upload + Preview -->
+    <div class="mt-5">
+      <input type="file" id="fileInput" accept=".pdf" hidden>
+      <div id="uploadArea" class="dashed-box rounded-xl p-8 text-center cursor-pointer">
+        <div class="w-10 h-10 mx-auto bg-white/10 rounded-full flex items-center justify-center mb-3">⬆️</div>
+        <div class="font-semibold text-[14px]">Choose, paste or drag PDF here</div>
+        <div class="text-[11px] text-white/60 mt-1">Crop invoices, A4 sheets to 4x6 thermal labels</div>
+        <button id="chooseBtn" class="mt-4 bg-white text-black px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-gray-100">Choose files</button>
+        <div id="fileInfo" class="mt-3 text-[11px] text-white/60 hidden"></div>
+        <div class="mt-4 text-[10px] text-white/40">Maximum 100MB, up to 500 files • All files auto-deleted after 1 hour</div>
+      </div>
+
+      <!-- Canvas Area - Hidden initially -->
+      <div id="canvasWrap" class="hidden mt-4 bg-[#1e1e1e] rounded-xl border border-white/10 p-3">
+        <div class="flex justify-between items-center mb-2">
+          <div class="text-[12px] font-semibold">PDF Preview - Drag to create yellow crop box</div>
+          <div class="text-[11px] text-white/50"><span id="pageInfo">Page 1</span></div>
+        </div>
+        <div id="canvasContainer" style="position:relative; background:#0f0f0f; border-radius:8px; overflow:hidden; display:flex; justify-content:center;">
+          <canvas id="pdfCanvas"></canvas>
+          <canvas id="overlayCanvas" class="crop-overlay"></canvas>
+        </div>
+        <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+          <div class="bg-[#2a2a2a] p-2 rounded">Left: <span id="coordLeft">0</span>px</div>
+          <div class="bg-[#2a2a2a] p-2 rounded">Top: <span id="coordTop">0</span>px</div>
+          <div class="bg-[#2a2a2a] p-2 rounded">W: <span id="coordW">0</span>px</div>
+          <div class="bg-[#2a2a2a] p-2 rounded">H: <span id="coordH">0</span>px</div>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button id="cropBtn" class="bg-[#facc15] text-black px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-yellow-300">Crop PDF & Download</button>
+          <button id="resetBtn" class="bg-[#2a2a2a] text-white px-4 py-2 rounded-full text-[12px]">Reset Box</button>
+          <label class="flex items-center gap-2 text-[12px] bg-[#2a2a2a] px-3 py-2 rounded-full"><input type="checkbox" id="ratio4x6"> Lock 4x6 ratio (Amazon/Flipkart)</label>
+        </div>
+        <div id="status" class="mt-2 text-[11px] text-emerald-400"></div>
+      </div>
+    </div>
+
+    <!-- SEO Sections -->
+    <div class="mt-8 space-y-6">
+      <div class="bg-[#1e1e1e] rounded-xl border border-white/10 p-5">
+        <h2 class="font-semibold text-[15px]">What is PDF cropping and why it matters for Indian sellers?</h2>
+        <p class="text-[13px] text-white/60 mt-3 leading-relaxed">PDF cropping changes the visible page area without deleting content permanently. It sets a new page box. For example, a courier company gives you A4 PDF containing 4 shipping labels (2x2 grid). Your thermal printer needs one label per 4x6 roll. By cropping, you select one label quadrant and create a perfect 4x6 print-ready PDF. Similarly, scanned documents often have large black borders — cropping removes them. For e-commerce, correct label size is critical. If you print A4 label on 4x6 paper, barcode gets cut and shipment goes into RTO, costing you money. Our tool lets you crop precisely to 10x15 cm (4x6 inch), the standard size accepted by Delhivery, Xpressbees, Ekart, Blue Dart and DTDC. It supports batch cropping — apply same crop box to all pages.</p>
+      </div>
+
+      <div class="bg-[#1e1e1e] rounded-xl border border-white/10 p-5">
+        <h2 class="font-semibold text-[15px]">How to Crop PDF - Step by step</h2>
+        <div class="grid sm:grid-cols-2 gap-3 mt-4">
+          <div class="bg-[#252525] p-3 rounded-lg"><div class="text-[12px] font-bold">1. Upload PDF</div><div class="text-[11px] text-white/50 mt-1">Click Choose files or drag your A4 invoice + label PDF. Supports up to 500 files.</div></div>
+          <div class="bg-[#252525] p-3 rounded-lg"><div class="text-[12px] font-bold">2. Select crop area</div><div class="text-[11px] text-white/50 mt-1">Drag rectangle around label. Use zoom. For thermal labels, lock aspect to 4x6.</div></div>
+          <div class="bg-[#252525] p-3 rounded-lg"><div class="text-[12px] font-bold">3. Apply to pages</div><div class="text-[11px] text-white/50 mt-1">Choose current page or all pages. For 4-up sheets, crop each page individually.</div></div>
+          <div class="bg-[#252525] p-3 rounded-lg"><div class="text-[12px] font-bold">4. Download cropped</div><div class="text-[11px] text-white/50 mt-1">Click Crop and download. Print-ready 4x6 file. Original auto-deleted after 1 hour.</div></div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-[#1e1e1e] to-[#252525] rounded-xl border border-yellow-500/20 p-5">
+        <h2 class="font-semibold text-[14px] text-yellow-300">Deep dive: A4 to 4x6 label cropping for Amazon, Flipkart, Meesho, Shiprocket</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+          <div class="bg-[#FF9900] text-black p-3 rounded-lg"><div class="font-bold">Amazon</div><div class="text-[11px]">FBA Labels</div></div>
+          <div class="bg-[#2874F0] text-white p-3 rounded-lg"><div class="font-bold">Flipkart</div><div class="text-[11px]">Seller Hub</div></div>
+          <div class="bg-[#F43397] text-white p-3 rounded-lg"><div class="font-bold">Meesho</div><div class="text-[11px]">Supplier Panel</div></div>
+          <div class="bg-[#95BF47] text-black p-3 rounded-lg"><div class="font-bold">Shopify</div><div class="text-[11px]">Shipping</div></div>
+          <div class="bg-[#FF3F6C] text-white p-3 rounded-lg"><div class="font-bold">Myntra</div><div class="text-[11px]">Partner</div></div>
+          <div class="bg-[#6C4CFF] text-white p-3 rounded-lg"><div class="font-bold">Shiprocket</div><div class="text-[11px]">AWB / Label</div></div>
+        </div>
+        <p class="text-[12px] text-white/50 mt-4">If you sell on Amazon FBA, Flipkart Seller Hub, Meesho Supplier Panel, Shopify or Shiprocket, you know the pain: marketplace generates A4 PDFs with 2 or 4 labels per page. Thermal printers like TSC, Arks, TVS need single 4x6. Cropping solves this. Our tool is built for Indian sellers with slow internet and high volume.</p>
+      </div>
+
+      <div class="bg-[#1e1e1e] rounded-xl border border-white/10 p-5">
+        <h2 class="font-semibold text-[14px]">Frequently Asked Questions</h2>
+        <div class="mt-3 space-y-2 text-[12px] text-white/60">
+          <div><b class="text-white">Is it secure?</b> Yes, all processing happens in your browser. No file goes to server.</div>
+          <div><b class="text-white">Will barcode stay scannable?</b> Yes, we preserve original quality, no recompression.</div>
+          <div><b class="text-white">Can I crop Meesho 4 labels A4 to single?</b> Yes, drag box around one label, apply to all pages.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div>
+    <div class="bg-[#1e1e1e] border border-white/10 rounded-xl p-4 text-center">
+      <div class="text-[11px] text-white/30">Ad space for Google AdSense - 300x250</div>
+      <div class="mt-3 h-[200px] bg-[#252525] rounded flex items-center justify-center text-white/20 text-[12px]">Your AdSense will appear here</div>
+    </div>
+    <div class="mt-4 bg-[#1e1e1e] border border-white/10 rounded-xl p-4">
+      <div class="text-[11px] font-semibold tracking-widest text-white/40">POPULAR IN INDIA</div>
+      <div class="mt-3 space-y-2 text-[12px] text-white/60">
+        <div>• Crop Meesho labels <span class="float-right text-white/20">2.4k</span></div>
+        <div>• Flipkart 4x6 thermal <span class="float-right text-white/20">1.8k</span></div>
+        <div>• Shiprocket AWB crop <span class="float-right text-white/20">1.2k</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="mt-10 border-t border-white/10 bg-[#161616] py-6 text-center text-[11px] text-white/30">
+  CropPDFPDF.com © 2025 • Free • No signup • Files deleted in 1h • Original helpful content
+</footer>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const fileInput = document.getElementById('fileInput');
+const uploadArea = document.getElementById('uploadArea');
+const chooseBtn = document.getElementById('chooseBtn');
+const pdfCanvas = document.getElementById('pdfCanvas');
+const overlayCanvas = document.getElementById('overlayCanvas');
+const canvasWrap = document.getElementById('canvasWrap');
+const fileInfo = document.getElementById('fileInfo');
+const ctx = pdfCanvas.getContext('2d');
+const octx = overlayCanvas.getContext('2d');
+let pdfDoc = null;
+let pdfBytes = null;
+let crop = {x:0,y:0,w:0,h:0, active:false, dragging:false, startX:0, startY:0, mode:'create'};
+let isDragging = false;
+
+function openPicker(e){ if(e) e.stopPropagation(); fileInput.click(); }
+chooseBtn.addEventListener('click', openPicker);
+chooseBtn.addEventListener('touchend', (e)=>{e.preventDefault(); openPicker(e);});
+uploadArea.addEventListener('click', openPicker);
+uploadArea.addEventListener('dragover', (e)=>{e.preventDefault(); uploadArea.style.borderColor='#facc15';});
+uploadArea.addEventListener('dragleave', ()=>{uploadArea.style.borderColor='#6b7fd0';});
+uploadArea.addEventListener('drop', (e)=>{e.preventDefault(); uploadArea.style.borderColor='#6b7fd0'; const f=e.dataTransfer.files[0]; if(f) handleFile(f);});
+
+fileInput.addEventListener('change', ()=>{ if(fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+async function handleFile(file){
+  fileInfo.textContent = file.name + ' • ' + Math.round(file.size/1024) + ' KB';
+  fileInfo.classList.remove('hidden');
+  const buf = await file.arrayBuffer();
+  pdfBytes = buf.slice(0);
+  const loadingTask = pdfjsLib.getDocument({data: buf});
+  pdfDoc = await loadingTask.promise;
+  const page = await pdfDoc.getPage(1);
+  const viewport = page.getViewport({scale:1.5});
+  pdfCanvas.width = viewport.width;
+  pdfCanvas.height = viewport.height;
+  overlayCanvas.width = viewport.width;
+  overlayCanvas.height = viewport.height;
+  await page.render({canvasContext: ctx, viewport}).promise;
+  canvasWrap.classList.remove('hidden');
+  crop = {x: viewport.width*0.15, y: viewport.height*0.15, w: viewport.width*0.7, h: viewport.height*0.5, active:true, dragging:false};
+  drawCrop();
+  document.getElementById('status').textContent = 'PDF loaded! Drag yellow box to adjust, then click Crop PDF & Download';
+}
+
+function drawCrop(){
+  octx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
+  if(!crop.active) return;
+  // dark overlay outside
+  octx.fillStyle = 'rgba(0,0,0,0.45)';
+  octx.fillRect(0,0,overlayCanvas.width, overlayCanvas.height);
+  octx.clearRect(crop.x, crop.y, crop.w, crop.h);
+  // yellow box
+  octx.setLineDash([8,6]);
+  octx.strokeStyle = '#facc15';
+  octx.lineWidth = 2;
+  octx.strokeRect(crop.x, crop.y, crop.w, crop.h);
+  octx.setLineDash([]);
+  octx.fillStyle = 'rgba(250,204,21,0.12)';
+  octx.fillRect(crop.x, crop.y, crop.w, crop.h);
+  // handles
+  const hs = 8;
+  [[crop.x, crop.y],[crop.x+crop.w, crop.y],[crop.x, crop.y+crop.h],[crop.x+crop.w, crop.y+crop.h]].forEach(([x,y])=>{
+    octx.fillStyle='#fff'; octx.fillRect(x-hs/2, y-hs/2, hs, hs);
+    octx.strokeStyle='#000'; octx.strokeRect(x-hs/2, y-hs/2, hs, hs);
+  });
+  document.getElementById('coordLeft').textContent=Math.round(crop.x);
+  document.getElementById('coordTop').textContent=Math.round(crop.y);
+  document.getElementById('coordW').textContent=Math.round(crop.w);
+  document.getElementById('coordH').textContent=Math.round(crop.h);
+}
+
+function getPos(e){
+  const rect = overlayCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const scaleX = overlayCanvas.width / rect.width;
+  const scaleY = overlayCanvas.height / rect.height;
+  return {x:(clientX-rect.left)*scaleX, y:(clientY-rect.top)*scaleY};
+}
+function hitTest(x,y){
+  const hs=12;
+  if(Math.abs(x-crop.x)<hs && Math.abs(y-crop.y)<hs) return 'nw';
+  if(Math.abs(x-(crop.x+crop.w))<hs && Math.abs(y-crop.y)<hs) return 'ne';
+  if(Math.abs(x-crop.x)<hs && Math.abs(y-(crop.y+crop.h))<hs) return 'sw';
+  if(Math.abs(x-(crop.x+crop.w))<hs && Math.abs(y-(crop.y+crop.h))<hs) return 'se';
+  if(x>crop.x && x<crop.x+crop.w && y>crop.y && y<crop.y+crop.h) return 'move';
+  return 'create';
+}
+
+overlayCanvas.addEventListener('mousedown', (e)=>{
+  const p=getPos(e); const hit=hitTest(p.x,p.y);
+  isDragging=true; crop.startX=p.x; crop.startY=p.y;
+  if(hit==='create'){ crop.x=p.x; crop.y=p.y; crop.w=0; crop.h=0; crop.mode='create'; }
+  else { crop.mode=hit; crop.orig={...crop}; }
+  crop.active=true;
+});
+overlayCanvas.addEventListener('mousemove', (e)=>{
+  if(!isDragging) return;
+  const p=getPos(e); const dx=p.x-crop.startX; const dy=p.y-crop.startY;
+  if(crop.mode==='create'){ crop.w=dx; crop.h=dy; if(crop.w<0){crop.x=p.x; crop.w=-crop.w;} if(crop.h<0){crop.y=p.y; crop.h=-crop.h;} }
+  else if(crop.mode==='move'){ crop.x=crop.orig.x+dx; crop.y=crop.orig.y+dy; }
+  else if(crop.mode==='se'){ crop.w=crop.orig.w+dx; crop.h=crop.orig.h+dy; }
+  else if(crop.mode==='nw'){ crop.x=crop.orig.x+dx; crop.y=crop.orig.y+dy; crop.w=crop.orig.w-dx; crop.h=crop.orig.h-dy; }
+  else if(crop.mode==='ne'){ crop.y=crop.orig.y+dy; crop.w=crop.orig.w+dx; crop.h=crop.orig.h-dy; }
+  else if(crop.mode==='sw'){ crop.x=crop.orig.x+dx; crop.w=crop.orig.w-dx; crop.h=crop.orig.h+dy; }
+  const ratioCheck=document.getElementById('ratio4x6').checked;
+  if(ratioCheck){ const target=101/152; crop.h=crop.w/target; }
+  drawCrop();
+});
+overlayCanvas.addEventListener('mouseup', ()=>{ isDragging=false; });
+overlayCanvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); overlayCanvas.dispatchEvent(new MouseEvent('mousedown',{clientX:e.touches[0].clientX, clientY:e.touches[0].clientY})); },{passive:false});
+overlayCanvas.addEventListener('touchmove', (e)=>{ e.preventDefault(); overlayCanvas.dispatchEvent(new MouseEvent('mousemove',{clientX:e.touches[0].clientX, clientY:e.touches[0].clientY})); },{passive:false});
+overlayCanvas.addEventListener('touchend', (e)=>{ overlayCanvas.dispatchEvent(new MouseEvent('mouseup',{})); });
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(!pdfCanvas.width) return;
+  crop={x:pdfCanvas.width*0.15, y:pdfCanvas.height*0.15, w:pdfCanvas.width*0.7, h:pdfCanvas.height*0.5, active:true};
+  drawCrop();
+});
+
+document.getElementById('cropBtn').addEventListener('click', async()=>{
+  if(!pdfBytes || !crop.active){ alert('First upload PDF and select crop area'); return; }
+  document.getElementById('status').textContent='Cropping... please wait';
+  try{
+    const { PDFDocument } = PDFLib;
+    const pdfDocLib = await PDFDocument.load(pdfBytes);
+    const pages = pdfDocLib.getPages();
+    // For first page render scale mapping
+    const scaleX = pages[0].getWidth() / pdfCanvas.width;
+    const scaleY = pages[0].getHeight() / pdfCanvas.height;
+    const pdfX = crop.x * scaleX;
+    const pdfW = crop.w * scaleX;
+    const pdfH = crop.h * scaleY;
+    const pdfY = pages[0].getHeight() - (crop.y + crop.h) * scaleY;
+    pages.forEach(p=>{
+      const w = p.getWidth(); const h = p.getHeight();
+      const sx = w / pdfCanvas.width; const sy = h / pdfCanvas.height;
+      const x = crop.x * sx; const ww = crop.w * sx; const hh = crop.h * sy; const y = h - (crop.y + crop.h)*sy;
+      p.setCropBox(x, y, ww, hh);
+    });
+    const out = await pdfDocLib.save();
+    const blob = new Blob([out], {type:'application/pdf'});
+    const url = URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='cropped.pdf'; a.click();
+    URL.revokeObjectURL(url);
+    document.getElementById('status').textContent='Cropped! Download started as cropped.pdf';
+  }catch(err){ console.error(err); document.getElementById('status').textContent='Error cropping: '+err.message; }
+});
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
