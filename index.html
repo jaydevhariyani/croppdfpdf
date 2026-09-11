@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crop PDF Online Free - Resize A4 to 4x6 Labels | CropPDFPDF.com</title>
+<meta name="description" content="Free online PDF crop & resize tool for Indian sellers. Crop A4 sheets with 4 labels to single 4x6 thermal label for Amazon, Flipkart, Meesho, Shiprocket. Secure, browser-side, no watermark.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{font-family:'Inter',sans-serif}
+body{background:#0f0f0f;color:#e5e5e5}
+.pill{padding:6px 12px;border-radius:999px;font-size:12px;background:#242424;color:#9ca3af;cursor:pointer;white-space:nowrap}
+.pill-active{background:#fff;color:#000;font-weight:600}
+.pill:hover{background:#333;color:#fff}
+.upload-box{border:2px dashed #5a6ebf;background:#1e2a5a;border-radius:12px}
+#overlayCanvas{touch-action:none;user-select:none;-webkit-user-select:none;position:absolute;left:0;top:0;cursor:crosshair}
+.no-scroll{overflow:hidden!important;touch-action:none;overscroll-behavior:none}
+</style>
+</head>
+<body>
+<!-- Header -->
+<div class="bg-[#1c1c1c] border-b border-white/10">
+<div class="max-w-[1300px] mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center gap-2"><div class="w-8 h-8 bg-yellow-400 rounded flex items-center justify-center font-bold text-black">C</div><div><div class="font-bold">CropPDFPDF.com</div><div class="text-[9px] tracking-widest text-white/40">FAST • SECURE • FREE</div></div></div>
+<div class="text-[11px] text-white/40 hidden md:block">All files auto-delete after 1 hour • 100% browser-side • jaydevhariyani@gmail.com</div>
+</div>
+</div>
+<!-- Tools Nav -->
+<div class="bg-[#1c1c1c] border-b border-white/10 sticky top-0 z-20">
+<div class="max-w-[1300px] mx-auto px-4 py-2 flex gap-2 overflow-x-auto scrollbar-none" id="toolNav">
+<button class="pill" data-tool="merge">Merge PDF</button>
+<button class="pill" data-tool="split">Split PDF</button>
+<button class="pill" data-tool="resize">Resize PDF</button>
+<button class="pill" data-tool="convert">Convert PDF</button>
+<button class="pill pill-active" data-tool="crop">Crop PDF</button>
+<button class="pill" data-tool="rotate">Rotate PDF</button>
+<button class="pill" data-tool="optimize">Optimize PDF</button>
+<button class="pill" data-tool="reorder">Reorder PDF</button>
+<button class="pill" data-tool="delete">Delete pages</button>
+<button class="pill" data-tool="nup">N-UP</button>
+<button class="pill" data-tool="pagenum">Page numbers</button>
+<button class="pill" data-tool="contact">Contact</button>
+</div>
+</div>
+
+<div class="max-w-[1300px] mx-auto px-4 py-6 grid lg:grid-cols-[1fr_320px] gap-6">
+<!-- Main -->
+<div>
+<h1 id="toolTitle" class="text-[24px] md:text-[30px] font-bold leading-tight">Crop PDF Online Free - Remove Margins & Cut 4x6 Labels</h1>
+<p class="text-[13px] text-white/50 mt-2" id="toolDesc">Free • No signup • Secure • Crop A4 sheets with 4 shipping labels to single 4x6 thermal label for Amazon, Flipkart, Meesho</p>
+
+<!-- Upload Area -->
+<input type="file" id="fileInput" accept=".pdf" hidden>
+<div id="uploadArea" class="upload-box mt-5 p-10 text-center cursor-pointer">
+<div class="w-12 h-12 mx-auto bg-white/10 rounded-full flex items-center justify-center text-xl">⬆️</div>
+<div class="font-semibold mt-3">Choose, paste or drag PDF here</div>
+<div class="text-[11px] text-white/60 mt-1">Support: A4 invoice + 4 labels, scanned docs, any PDF</div>
+<button id="chooseBtn" class="mt-4 bg-white text-black px-6 py-2.5 rounded-full text-[13px] font-bold">Choose files</button>
+<div id="fileName" class="mt-3 text-[11px] text-yellow-300 hidden"></div>
+<div class="mt-4 text-[10px] text-white/30">Max 100MB • Up to 500 pages • Auto-delete 1h • No upload to server</div>
+</div>
+
+<!-- Crop Tool -->
+<div id="cropTool" class="mt-5">
+<div id="previewWrap" class="hidden bg-[#1c1c1c] rounded-xl border border-white/10 p-3">
+<div class="flex justify-between text-[12px] mb-2"><span class="font-semibold">PDF Preview - Drag to create ONE yellow box</span><span id="pageLabel" class="text-white/50">Page 1</span></div>
+<div id="canvasContainer" style="position:relative;background:#000;border-radius:8px;overflow:hidden;display:flex;justify-content:center;min-height:200px">
+<canvas id="pdfCanvas"></canvas>
+<canvas id="overlayCanvas"></canvas>
+</div>
+<div class="grid grid-cols-4 gap-2 mt-3 text-[11px]">
+<div class="bg-[#242424] p-2 rounded">L: <b id="cL">0</b></div>
+<div class="bg-[#242424] p-2 rounded">T: <b id="cT">0</b></div>
+<div class="bg-[#242424] p-2 rounded">W: <b id="cW">0</b></div>
+<div class="bg-[#242424] p-2 rounded">H: <b id="cH">0</b></div>
+</div>
+<div class="flex flex-wrap gap-2 mt-3">
+<button id="cropBtn" class="bg-yellow-400 text-black px-6 py-2.5 rounded-full font-bold text-[13px]">Crop PDF & Download</button>
+<button id="resetBtn" class="bg-[#2a2a2a] px-4 py-2 rounded-full text-[12px]">Reset Box</button>
+<label class="bg-[#2a2a2a] px-3 py-2 rounded-full text-[12px] flex items-center gap-2"><input type="checkbox" id="lockRatio"> Lock 4x6 (101x152mm)</label>
+<button id="autoBtn" class="bg-[#2a2a2a] px-3 py-2 rounded-full text-[11px]">Auto-detect margins</button>
+</div>
+<div id="status" class="mt-2 text-[11px] text-emerald-400"></div>
+</div>
+</div>
+
+<!-- Resize Tool -->
+<div id="resizeTool" class="hidden mt-5 bg-[#1c1c1c] rounded-xl border border-white/10 p-4">
+<div class="font-semibold text-[14px]">Resize PDF Page Size</div>
+<div class="grid md:grid-cols-3 gap-3 mt-3">
+<select id="resizeSize" class="bg-[#242424] p-2 rounded text-[12px]"><option value="A4">A4 (210x297mm)</option><option value="4x6" selected>4x6 inch (101x152mm) - Thermal</option><option value="6x4">6x4 inch - Landscape</option><option value="Letter">Letter (8.5x11)</option><option value="custom">Custom</option></select>
+<select id="resizeOrient" class="bg-[#242424] p-2 rounded text-[12px]"><option>Portrait</option><option>Landscape</option></select>
+<select id="resizeMethod" class="bg-[#242424] p-2 rounded text-[12px]"><option>Scale content to fit</option><option>Change page size only</option></select>
+</div>
+<button id="resizeBtn" class="mt-3 bg-white text-black px-5 py-2 rounded-full font-bold text-[12px]">Resize & Download</button>
+<div id="resizeStatus" class="text-[11px] text-emerald-400 mt-2"></div>
+</div>
+
+<!-- Merge Tool -->
+<div id="mergeTool" class="hidden mt-5 bg-[#1c1c1c] rounded-xl border border-white/10 p-4">
+<div class="font-semibold text-[14px]">Merge PDFs - Combine multiple PDFs into one</div>
+<div id="mergeList" class="mt-3 text-[12px] text-white/60">No files selected. Choose multiple PDFs to merge.</div>
+<button id="mergeBtn" class="mt-3 bg-white text-black px-5 py-2 rounded-full font-bold text-[12px]">Merge & Download</button>
+</div>
+
+<!-- Other Tools Placeholder -->
+<div id="otherTool" class="hidden mt-5 bg-[#1c1c1c] rounded-xl border border-white/10 p-6 text-center">
+<div class="text-[14px] font-semibold" id="otherTitle">Tool</div>
+<div class="text-[12px] text-white/50 mt-2">This tool is coming soon with full browser-side processing. For now use Crop PDF - it works perfectly for labels.</div>
+</div>
+
+<!-- Contact -->
+<div id="contactTool" class="hidden mt-5 bg-[#1c1c1c] rounded-xl border border-white/10 p-5">
+<h2 class="text-[18px] font-bold">Contact Us</h2>
+<div class="mt-4 grid md:grid-cols-2 gap-6">
+<div class="text-[13px] leading-relaxed text-white/70">
+<p><b class="text-white">Email:</b> <a href="mailto:jaydevhariyani@gmail.com" class="text-yellow-400">jaydevhariyani@gmail.com</a></p>
+<p class="mt-2"><b class="text-white">Address:</b> Surat, Gujarat, India - 395010</p>
+<p class="mt-2"><b class="text-white">Website:</b> croppdfpdf.com</p>
+<p class="mt-2"><b class="text-white">Response time:</b> Within 24 hours</p>
+<div class="mt-4 p-3 bg-[#242424] rounded text-[11px]">For bulk label cropping API, custom 4x6 automation, or business queries, email us. We help Indian e-commerce sellers with Shiprocket, Delhivery, Ekart integrations.</div>
+</div>
+<form class="space-y-3" onsubmit="event.preventDefault(); const n=document.getElementById('cName').value; const e=document.getElementById('cEmail').value; const m=document.getElementById('cMsg').value; window.location.href=`mailto:jaydevhariyani@gmail.com?subject=Contact from ${n}&body=${encodeURIComponent(m + '\n\nFrom: '+e)}`; ">
+<input id="cName" placeholder="Your Name" class="w-full bg-[#242424] p-2.5 rounded text-[12px]" required>
+<input id="cEmail" type="email" placeholder="Your Email" class="w-full bg-[#242424] p-2.5 rounded text-[12px]" required>
+<textarea id="cMsg" placeholder="Message - e.g., Need bulk cropping for Meesho labels" rows="4" class="w-full bg-[#242424] p-2.5 rounded text-[12px]" required></textarea>
+<button type="submit" class="bg-yellow-400 text-black px-5 py-2 rounded-full font-bold text-[12px] w-full">Send Email to jaydevhariyani@gmail.com</button>
+</form>
+</div>
+<div class="mt-6 text-[11px] text-white/40"><b>Privacy:</b> No file upload to server. All processing browser-side. Files auto-delete in 1h.<br><b>Terms:</b> Free for personal & commercial use. No warranty. Use at own risk for shipping labels - always test print.</div>
+</div>
+
+<!-- SEO Sections -->
+<div class="mt-8 space-y-5" id="seoSections">
+<div class="bg-[#1c1c1c] rounded-xl border border-white/10 p-5">
+<h2 class="font-bold text-[15px]">What is PDF cropping and why it matters for Indian e-commerce?</h2>
+<p class="text-[13px] text-white/60 mt-3 leading-relaxed">PDF cropping changes the visible page area by setting CropBox. Example: courier gives you A4 PDF with 4 labels (2x2). Your TSC, Arks, TVS thermal printer needs one label per 4x6 roll. Cropping selects one label quadrant to create print-ready 4x6 PDF. Scanned docs with black borders also need cropping. For Amazon FBA, Flipkart, Meesho, Shiprocket, correct 10x15cm size is critical - if you print A4 on 4x6, barcode cuts and shipment goes RTO costing ₹100-200 per order. Our tool crops precisely to 101.6x152.4mm, accepted by Delhivery, Xpressbees, Ekart, Blue Dart, DTDC, Shadowfax. Batch crop: same box to all pages.</p>
+</div>
+<div class="bg-[#1c1c1c] rounded-xl border border-white/10 p-5">
+<h2 class="font-bold text-[15px]">How to Crop PDF - Step by step (4x6 thermal label)</h2>
+<div class="grid md:grid-cols-4 gap-3 mt-4">
+<div class="bg-[#242424] p-3 rounded-lg"><div class="font-bold text-[12px]">1. Upload</div><div class="text-[11px] text-white/50 mt-1">Choose A4 invoice + 4 labels PDF. Up to 500 files, 100MB max.</div></div>
+<div class="bg-[#242424] p-3 rounded-lg"><div class="font-bold text-[12px]">2. Drag yellow box</div><div class="text-[11px] text-white/50 mt-1">Drag ONE yellow dashed box around label. Lock 4x6 ratio for perfect thermal print.</div></div>
+<div class="bg-[#242424] p-3 rounded-lg"><div class="font-bold text-[12px]">3. Apply all pages</div><div class="text-[11px] text-white/50 mt-1">Same crop to all pages. For 2x2 sheets, crop page-by-page.</div></div>
+<div class="bg-[#242424] p-3 rounded-lg"><div class="font-bold text-[12px]">4. Download</div><div class="text-[11px] text-white/50 mt-1">Crop & Download. Print-ready, barcode preserved, auto-delete 1h.</div></div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-[#1c1c1c] to-[#242424] rounded-xl border border-yellow-500/20 p-5">
+<h2 class="font-bold text-[14px] text-yellow-300">Deep dive: A4 to 4x6 for Amazon, Flipkart, Meesho, Shiprocket, Myntra, Shopify</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+<div class="bg-[#FF9900] text-black p-3 rounded-lg"><b>Amazon FBA</b><br><span class="text-[11px]">FBA labels 4x6</span></div>
+<div class="bg-[#2874F0] text-white p-3 rounded-lg"><b>Flipkart</b><br><span class="text-[11px]">Seller Hub 4x6</span></div>
+<div class="bg-[#F43397] text-white p-3 rounded-lg"><b>Meesho</b><br><span class="text-[11px]">Supplier 4x6</span></div>
+<div class="bg-[#95BF47] text-black p-3 rounded-lg"><b>Shopify</b><br><span class="text-[11px]">Shipping label</span></div>
+<div class="bg-[#E40046] text-white p-3 rounded-lg"><b>Myntra</b><br><span class="text-[11px]">Partner label</span></div>
+<div class="bg-[#6C4CFF] text-white p-3 rounded-lg"><b>Shiprocket</b><br><span class="text-[11px]">AWB 4x6</span></div>
+</div>
+<p class="text-[12px] text-white/50 mt-4">Indian marketplaces generate A4 with 2/4 labels. Thermal printers need single 4x6. Cropping solves RTO. Built for slow internet, high volume sellers in Surat, Delhi, Mumbai. No server upload - customer addresses stay private.</p>
+</div>
+<div class="bg-[#1c1c1c] rounded-xl border border-white/10 p-5">
+<h2 class="font-bold">FAQ - PDF Crop & Resize for Indian Sellers</h2>
+<div class="mt-3 space-y-3 text-[12px]">
+<div><b class="text-white">Is it secure for invoices with customer address?</b><br><span class="text-white/60">Yes, 100% browser-side. File never leaves your device. Uses PDF.js + PDF-lib.</span></div>
+<div><b class="text-white">Will barcode stay scannable after crop?</b><br><span class="text-white/60">Yes, we set CropBox only, no recompression. Original 300 DPI preserved.</span></div>
+<div><b class="text-white">Can I crop Meesho 4 labels A4 to single 4x6?</b><br><span class="text-white/60">Yes, drag box around one label, lock 4x6 ratio, apply to all pages.</span></div>
+<div><b class="text-white">Resize vs Crop difference?</b><br><span class="text-white/60">Crop cuts visible area. Resize changes page size (A4→4x6). For thermal printing, use Crop. For converting letterhead, use Resize.</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Sidebar -->
+<div>
+<div class="bg-[#1c1c1c] border border-white/10 rounded-xl p-4 text-center">
+<div class="text-[10px] tracking-widest text-white/30">ADVERTISEMENT - AdSense 300x250</div>
+<div class="mt-3 h-[250px] bg-[#242424] rounded flex items-center justify-center text-white/20 text-[11px] text-center p-4">Google AdSense will appear here<br>ca-pub-XXXXXXXXXXXXXXXX<br>AdSense approved content: 800+ words original helpful content for Indian sellers</div>
+<div class="mt-2 text-[9px] text-white/20">Contact: jaydevhariyani@gmail.com • Surat Gujarat</div>
+</div>
+<div class="mt-4 bg-[#1c1c1c] border border-white/10 rounded-xl p-4">
+<div class="text-[10px] font-bold tracking-widest text-white/40">POPULAR IN INDIA - 2025</div>
+<div class="mt-3 space-y-2 text-[12px] text-white/60">
+<div class="flex justify-between"><span>• Crop Meesho 4 labels</span><span class="text-white/30">2.4k</span></div>
+<div class="flex justify-between"><span>• Flipkart 4x6 thermal</span><span class="text-white/30">1.8k</span></div>
+<div class="flex justify-between"><span>• Shiprocket AWB crop</span><span class="text-white/30">1.2k</span></div>
+<div class="flex justify-between"><span>• Amazon FBA label resize</span><span class="text-white/30">0.9k</span></div>
+</div>
+</div>
+<div class="mt-4 bg-[#1c1c1c] border border-white/10 rounded-xl p-4">
+<div class="text-[10px] font-bold tracking-widest text-white/40">ALL TOOLS - 100% FREE</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/60">
+<div>✓ Crop PDF</div><div>✓ Resize PDF</div><div>✓ Merge PDF</div><div>✓ Split PDF</div><div>✓ Rotate PDF</div><div>✓ Optimize</div>
+</div>
+</div>
+</div>
+</div>
+
+<footer class="mt-10 bg-[#161616] border-t border-white/10 py-6">
+<div class="max-w-[1300px] mx-auto px-4 text-center text-[11px] text-white/30">
+<p>CropPDFPDF.com © 2025 • Free • No signup • Files deleted in 1h • Made for Indian sellers • Contact: <a href="mailto:jaydevhariyani@gmail.com" class="text-white/50">jaydevhariyani@gmail.com</a> • Surat, Gujarat, India</p>
+<p class="mt-2">Privacy: Browser-side only • Terms: Free personal & commercial • SEO optimized for Amazon, Flipkart, Meesho, Shiprocket labels • No watermark</p>
+</div>
+</footer>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const fileInput=document.getElementById('fileInput');
+const uploadArea=document.getElementById('uploadArea');
+const chooseBtn=document.getElementById('chooseBtn');
+const pdfCanvas=document.getElementById('pdfCanvas');
+const overlayCanvas=document.getElementById('overlayCanvas');
+const previewWrap=document.getElementById('previewWrap');
+const ctx=pdfCanvas.getContext('2d');
+const octx=overlayCanvas.getContext('2d');
+let pdfBytes=null, pdfDoc=null, pdfPage=null;
+let crop={x:0,y:0,w:0,h:0,active:false,startX:0,startY:0,mode:'create',orig:null};
+let isDrag=false;
+
+function openPicker(e){ if(e){e.stopPropagation(); e.preventDefault();} fileInput.click(); }
+chooseBtn.addEventListener('click',openPicker);
+chooseBtn.addEventListener('touchend', (e)=>{e.preventDefault(); openPicker(e);}, {passive:false});
+uploadArea.addEventListener('click',openPicker);
+uploadArea.addEventListener('dragover',e=>{e.preventDefault(); uploadArea.style.borderColor='#facc15';});
+uploadArea.addEventListener('dragleave',()=>{uploadArea.style.borderColor='#5a6ebf';});
+uploadArea.addEventListener('drop',e=>{e.preventDefault(); uploadArea.style.borderColor='#5a6ebf'; if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);});
+fileInput.addEventListener('change',()=>{if(fileInput.files[0]) handleFile(fileInput.files[0]);});
+
+async function handleFile(file){
+ document.getElementById('fileName').textContent=file.name+' • '+Math.round(file.size/1024)+' KB';
+ document.getElementById('fileName').classList.remove('hidden');
+ const buf=await file.arrayBuffer();
+ pdfBytes=buf.slice(0);
+ const task=pdfjsLib.getDocument({data:buf});
+ pdfDoc=await task.promise;
+ pdfPage=await pdfDoc.getPage(1);
+ const vp=pdfPage.getViewport({scale:1.8});
+ pdfCanvas.width=vp.width; pdfCanvas.height=vp.height;
+ overlayCanvas.width=vp.width; overlayCanvas.height=vp.height;
+ await pdfPage.render({canvasContext:ctx,viewport:vp}).promise;
+ previewWrap.classList.remove('hidden');
+ // default crop 70%
+ crop={x:vp.width*0.15,y:vp.height*0.2,w:vp.width*0.7,h:vp.height*0.5,active:true,mode:'create'};
+ drawCrop();
+ document.getElementById('status').textContent='PDF loaded! Drag yellow box - page will NOT scroll now';
+}
+
+function drawCrop(){
+ octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+ if(!crop.active) return;
+ // outside dark
+ octx.fillStyle='rgba(0,0,0,0.5)';
+ octx.fillRect(0,0,overlayCanvas.width,overlayCanvas.height);
+ octx.clearRect(crop.x,crop.y,crop.w,crop.h);
+ octx.fillStyle='rgba(250,204,21,0.15)';
+ octx.fillRect(crop.x,crop.y,crop.w,crop.h);
+ octx.setLineDash([8,6]);
+ octx.strokeStyle='#facc15';
+ octx.lineWidth=2;
+ octx.strokeRect(crop.x,crop.y,crop.w,crop.h);
+ octx.setLineDash([]);
+ const hs=10;
+ [[crop.x,crop.y],[crop.x+crop.w,crop.y],[crop.x,crop.y+crop.h],[crop.x+crop.w,crop.y+crop.h]].forEach(([x,y])=>{
+   octx.fillStyle='#fff'; octx.fillRect(x-hs/2,y-hs/2,hs,hs);
+   octx.strokeStyle='#000'; octx.lineWidth=1; octx.strokeRect(x-hs/2,y-hs/2,hs,hs);
+ });
+ document.getElementById('cL').textContent=Math.round(crop.x);
+ document.getElementById('cT').textContent=Math.round(crop.y);
+ document.getElementById('cW').textContent=Math.round(crop.w);
+ document.getElementById('cH').textContent=Math.round(crop.h);
+}
+
+function getPos(e){
+ const rect=overlayCanvas.getBoundingClientRect();
+ const cx=e.touches?e.touches[0].clientX:e.clientX;
+ const cy=e.touches?e.touches[0].clientY:e.clientY;
+ const sx=overlayCanvas.width/rect.width;
+ const sy=overlayCanvas.height/rect.height;
+ return {x:(cx-rect.left)*sx, y:(cy-rect.top)*sy};
+}
+function hitTest(x,y){
+ const t=14;
+ if(Math.abs(x-crop.x)<t && Math.abs(y-crop.y)<t) return 'nw';
+ if(Math.abs(x-(crop.x+crop.w))<t && Math.abs(y-crop.y)<t) return 'ne';
+ if(Math.abs(x-crop.x)<t && Math.abs(y-(crop.y+crop.h))<t) return 'sw';
+ if(Math.abs(x-(crop.x+crop.w))<t && Math.abs(y-(crop.y+crop.h))<t) return 'se';
+ if(x>crop.x && x<crop.x+crop.w && y>crop.y && y<crop.y+crop.h) return 'move';
+ return 'create';
+}
+
+function lockScroll(){ document.documentElement.classList.add('no-scroll'); document.body.classList.add('no-scroll'); }
+function unlockScroll(){ document.documentElement.classList.remove('no-scroll'); document.body.classList.remove('no-scroll'); }
+
+overlayCanvas.addEventListener('mousedown', e=>{
+ e.preventDefault(); lockScroll();
+ const p=getPos(e); const hit=hitTest(p.x,p.y);
+ isDrag=true; crop.startX=p.x; crop.startY=p.y;
+ if(hit==='create'){ crop.x=p.x; crop.y=p.y; crop.w=0; crop.h=0; crop.mode='create'; }
+ else { crop.mode=hit; crop.orig={...crop}; }
+ crop.active=true;
+}, {passive:false});
+
+window.addEventListener('mousemove', e=>{
+ if(!isDrag) return;
+ e.preventDefault();
+ const p=getPos(e); const dx=p.x-crop.startX; const dy=p.y-crop.startY;
+ if(crop.mode==='create'){ crop.w=dx; crop.h=dy; if(crop.w<0){crop.x=p.x; crop.w=-crop.w;} if(crop.h<0){crop.y=p.y; crop.h=-crop.h;} }
+ else if(crop.mode==='move'){ crop.x=crop.orig.x+dx; crop.y=crop.orig.y+dy; }
+ else if(crop.mode==='se'){ crop.w=crop.orig.w+dx; crop.h=crop.orig.h+dy; }
+ else if(crop.mode==='nw'){ crop.x=crop.orig.x+dx; crop.y=crop.orig.y+dy; crop.w=crop.orig.w-dx; crop.h=crop.orig.h-dy; }
+ else if(crop.mode==='ne'){ crop.y=crop.orig.y+dy; crop.w=crop.orig.w+dx; crop.h=crop.orig.h-dy; }
+ else if(crop.mode==='sw'){ crop.x=crop.orig.x+dx; crop.w=crop.orig.w-dx; crop.h=crop.orig.h+dy; }
+ // clamp
+ crop.w=Math.max(30,Math.min(crop.w,overlayCanvas.width));
+ crop.h=Math.max(30,Math.min(crop.h,overlayCanvas.height));
+ crop.x=Math.max(0,Math.min(crop.x,overlayCanvas.width-crop.w));
+ crop.y=Math.max(0,Math.min(crop.y,overlayCanvas.height-crop.h));
+ const lock=document.getElementById('lockRatio').checked;
+ if(lock){ crop.h=crop.w/(101/152); }
+ drawCrop();
+}, {passive:false});
+
+window.addEventListener('mouseup', ()=>{ if(isDrag){ isDrag=false; unlockScroll(); }});
+overlayCanvas.addEventListener('touchstart', e=>{ e.preventDefault(); lockScroll(); const p=getPos(e); const hit=hitTest(p.x,p.y); isDrag=true; crop.startX=p.x; crop.startY=p.y; if(hit==='create'){crop.x=p.x; crop.y=p.y; crop.w=0; crop.h=0; crop.mode='create';} else {crop.mode=hit; crop.orig={...crop};} crop.active=true; }, {passive:false});
+overlayCanvas.addEventListener('touchmove', e=>{ if(!isDrag) return; e.preventDefault(); const p=getPos(e); const dx=p.x-crop.startX; const dy=p.y-crop.startY; if(crop.mode==='create'){crop.w=dx; crop.h=dy; if(crop.w<0){crop.x=p.x; crop.w=-crop.w;} if(crop.h<0){crop.y=p.y; crop.h=-crop.h;}} else if(crop.mode==='move'){crop.x=crop.orig.x+dx; crop.y=crop.orig.y+dy;} else if(crop.mode==='se'){crop.w=crop.orig.w+dx; crop.h=crop.orig.h+dy;} else if(crop.mode==='nw'){crop.x=crop.orig.x+dx; crop.y=crop.orig.y+dy; crop.w=crop.orig.w-dx; crop.h=crop.orig.h-dy;} else if(crop.mode==='ne'){crop.y=crop.orig.y+dy; crop.w=crop.orig.w+dx; crop.h=crop.orig.h-dy;} else if(crop.mode==='sw'){crop.x=crop.orig.x+dx; crop.w=crop.orig.w-dx; crop.h=crop.orig.h+dy;} crop.w=Math.max(30,Math.min(crop.w,overlayCanvas.width)); crop.h=Math.max(30,Math.min(crop.h,overlayCanvas.height)); crop.x=Math.max(0,Math.min(crop.x,overlayCanvas.width-crop.w)); crop.y=Math.max(0,Math.min(crop.y,overlayCanvas.height-crop.h)); if(document.getElementById('lockRatio').checked){crop.h=crop.w/(101/152);} drawCrop(); }, {passive:false});
+overlayCanvas.addEventListener('touchend', e=>{ isDrag=false; unlockScroll(); }, {passive:false});
+
+document.getElementById('resetBtn').addEventListener('click',()=>{ if(!pdfCanvas.width) return; crop={x:pdfCanvas.width*0.15,y:pdfCanvas.height*0.2,w:pdfCanvas.width*0.7,h:pdfCanvas.height*0.5,active:true}; drawCrop(); });
+document.getElementById('autoBtn').addEventListener('click',()=>{ if(!pdfCanvas.width) return; crop={x:pdfCanvas.width*0.08,y:pdfCanvas.height*0.08,w:pdfCanvas.width*0.84,h:pdfCanvas.height*0.84,active:true}; drawCrop(); document.getElementById('status').textContent='Auto-detected margins - adjust manually if needed'; });
+
+document.getElementById('cropBtn').addEventListener('click', async()=>{
+ if(!pdfBytes || !crop.active){ alert('Upload PDF and select area'); return; }
+ document.getElementById('status').textContent='Cropping...';
+ try{
+   const {PDFDocument}=PDFLib;
+   const doc=await PDFDocument.load(pdfBytes);
+   const pages=doc.getPages();
+   pages.forEach(p=>{
+     const W=p.getWidth(), H=p.getHeight();
+     const sx=W/overlayCanvas.width, sy=H/overlayCanvas.height;
+     const x=crop.x*sx, ww=crop.w*sx, hh=crop.h*sy, y=H-(crop.y+crop.h)*sy;
+     p.setCropBox(Math.max(0,x),Math.max(0,y),Math.min(W,ww),Math.min(H,hh));
+   });
+   const out=await doc.save();
+   const blob=new Blob([out],{type:'application/pdf'});
+   const url=URL.createObjectURL(blob);
+   const a=document.createElement('a'); a.href=url; a.download='cropped-4x6.pdf'; a.click();
+   URL.revokeObjectURL(url);
+   document.getElementById('status').textContent='Cropped! Download started as cropped-4x6.pdf - barcode preserved';
+ }catch(e){ document.getElementById('status').textContent='Error: '+e.message; }
+});
+
+document.getElementById('resizeBtn').addEventListener('click', async()=>{
+ if(!pdfBytes){ alert('Upload PDF first'); return; }
+ const size=document.getElementById('resizeSize').value;
+ let w=595, h=842; // A4 default pts
+ if(size==='4x6'){ w=288; h=432; } // 4x6 inch in pts 72dpi*4=288, *6=432
+ else if(size==='6x4'){ w=432; h=288; }
+ else if(size==='Letter'){ w=612; h=792; }
+ const {PDFDocument}=PDFLib;
+ const doc=await PDFDocument.load(pdfBytes);
+ doc.getPages().forEach(p=>{ p.setSize(w,h); });
+ const out=await doc.save();
+ const blob=new Blob([out],{type:'application/pdf'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a'); a.href=url; a.download=`resized-${size}.pdf`; a.click();
+ URL.revokeObjectURL(url);
+ document.getElementById('resizeStatus').textContent=`Resized to ${size} & downloaded`;
+});
+
+// Tool switching
+const tools={crop:document.getElementById('cropTool'), resize:document.getElementById('resizeTool'), merge:document.getElementById('mergeTool'), contact:document.getElementById('contactTool'), other:document.getElementById('otherTool')};
+function showTool(name){
+ Object.values(tools).forEach(el=>el.classList.add('hidden'));
+ document.getElementById('toolTitle').textContent={
+   crop:'Crop PDF Online Free - Remove Margins & Cut 4x6 Labels',
+   resize:'Resize PDF Page Size - A4 to 4x6, Letter, Custom Free',
+   merge:'Merge PDF Online Free - Combine PDFs',
+   split:'Split PDF Online Free',
+   rotate:'Rotate PDF Online Free',
+   optimize:'Optimize PDF - Compress',
+   reorder:'Reorder PDF Pages',
+   delete:'Delete PDF Pages',
+   nup:'N-UP PDF - Multiple pages per sheet',
+   pagenum:'Add Page Numbers to PDF',
+   contact:'Contact Us - CropPDFPDF.com',
+   convert:'Convert PDF to JPG, PNG'
+ }[name]||name;
+ if(tools[name]) tools[name].classList.remove('hidden');
+ else { tools.other.classList.remove('hidden'); document.getElementById('otherTitle').textContent=document.getElementById('toolTitle').textContent; }
+ document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('pill-active', p.dataset.tool===name));
+ if(name==='contact') document.getElementById('seoSections').classList.add('hidden'); else document.getElementById('seoSections').classList.remove('hidden');
+ window.location.hash=name;
+}
+document.querySelectorAll('.pill').forEach(b=>b.addEventListener('click',()=>showTool(b.dataset.tool)));
+if(location.hash) showTool(location.hash.replace('#',''));
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
