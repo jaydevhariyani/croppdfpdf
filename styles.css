@@ -2,109 +2,86 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary: #6a7eb5; /* PDFResizer Blue */
-  --primary-dark: #56689a;
+  --primary: #4a5c88; /* PDFResizer Blue */
   --bg: #ffffff;
-  --card: #ffffff;
   --text: #333333;
   --text-muted: #666666;
   --border: #cccccc;
-  --radius: 4px;
 }
 
-html { scroll-behavior: smooth; }
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
-  min-height: 100vh;
+  line-height: 1.5;
 }
 
 .container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 960px; /* PDFResizer જેવી જ પહોળાઈ */
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 15px;
 }
 
-/* ===== Header & PDFResizer Menu ===== */
+/* ===== Header & Logo ===== */
 .header {
-  background: #ffffff;
-  padding: 15px 0;
+  padding: 20px 0;
+  background: white;
 }
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 .logo {
+  text-decoration: none;
+  color: #222;
+  font-size: 32px;
+  font-weight: bold;
+  font-style: italic;
   display: flex;
   align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: #000;
-  font-family: Arial, sans-serif;
-  font-weight: 700;
-  font-size: 28px;
-  letter-spacing: -1px;
+  gap: 10px;
 }
-.logo-icon { font-size: 32px; color: #333; }
-.logo-text { font-style: italic; }
+.logo-icon {
+  background: #333;
+  color: #4a5c88;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-style: normal;
+}
 
-/* PDF Resizer Style Dark Gray Menu */
-.pdf-resizer-menu { 
-  background: #666677; 
-  display: flex; 
-  flex-wrap: wrap; 
-  justify-content: center; 
-  padding: 0; 
-  margin-top: 15px;
-  margin-bottom: 30px; 
+/* ===== PDFResizer Dark Gray Menu ===== */
+.pdf-resizer-menu {
+  background: #666677;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 25px;
 }
-.pdf-resizer-menu a { 
-  color: white; 
-  text-decoration: none; 
-  padding: 12px 18px; 
-  font-size: 14px; 
-  border-right: 1px solid #777788; 
+.pdf-resizer-menu a {
+  color: white;
+  text-decoration: none;
+  padding: 12px 18px;
+  font-size: 14px;
+  border-right: 1px solid #777788;
 }
 .pdf-resizer-menu a:hover { background: #555566; }
-.pdf-resizer-menu a.active { background: #333344; }
+.pdf-resizer-menu a.active { background: #333344; font-weight: bold; }
 
-/* Hide old nav if using new menu */
-.nav { display: none; } 
-.menu-toggle { display: none; }
-
-/* ===== Hero (Hidden/Simplified to match PDFResizer) ===== */
-.hero {
-  text-align: center;
-  padding: 20px 0;
-}
-.hero h1 {
-  font-size: 24px;
-  font-weight: normal;
-  margin-bottom: 10px;
-  color: #333;
-}
-.hero-sub {
-  font-size: 15px;
-  color: var(--text-muted);
-  max-width: 800px;
-  margin: 0 auto;
-}
-.platform-badges { display: none; } /* PDFResizer doesn't use badges */
+/* Hide Old Elements */
+.nav, .menu-toggle, .hero { display: none; }
 
 /* ===== Tool Section ===== */
-.tool-section { padding: 10px 0 40px; }
-.tool-card {
-  background: var(--card);
-  border: 1px solid #e0e0e0;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+.tool-section { padding-bottom: 40px; }
+
+.page-title {
+  font-size: 24px;
+  font-weight: normal;
+  color: #333;
+  margin-bottom: 20px;
 }
 
-/* ===== PDFResizer Style Blue Upload Zone ===== */
+/* ===== Blue Upload Zone (Dashed Border) ===== */
 .upload-zone {
   background-color: #6a7eb5;
   border: 2px dashed #ffffff;
@@ -112,18 +89,16 @@ body {
   padding: 80px 20px;
   text-align: center;
   color: white;
-  margin: 20px auto;
+  margin: 0 auto;
   max-width: 800px;
   cursor: pointer;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
   transition: background 0.2s;
 }
-.upload-zone:hover, .upload-zone.dragover {
-  background-color: #56689a;
-}
+.upload-zone:hover { background-color: #56689a; }
 .upload-icon { display: none; }
 .upload-zone h2 {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: normal;
   margin-bottom: 20px;
 }
@@ -135,22 +110,17 @@ body {
 
 /* Buttons */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 3px;
-  font-weight: normal;
+  display: inline-block;
+  padding: 8px 15px;
   font-size: 14px;
-  border: none;
+  border: 1px solid #ccc;
+  border-radius: 3px;
   cursor: pointer;
-  transition: background 0.2s;
+  text-decoration: none;
 }
 .btn-primary {
-  background: #ffffff;
+  background: white;
   color: #333;
-  border: 1px solid #ccc;
 }
 .btn-primary:hover { background: #f0f0f0; }
 .btn-primary:disabled {
@@ -159,65 +129,68 @@ body {
   cursor: not-allowed;
 }
 
-.upload-zone .btn-primary {
-  padding: 8px 15px;
-  font-weight: bold;
-}
-
-/* Workspace */
+/* ===== Workspace & Toolbar ===== */
 .workspace-header {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  background: #fdfdfd;
+  margin-bottom: 20px;
+}
+.file-info {
   margin-bottom: 15px;
+  font-size: 14px;
 }
-.file-info { font-size: 14px; font-weight: bold; }
-.page-count { color: #666; font-weight: normal; margin-left: 10px; }
+.file-name { font-weight: bold; }
+.page-count { color: #666; margin-left: 10px; }
 
-/* Controls */
-.controls {
+/* The Toolbar inside workspace */
+.toolbar-actions {
   display: flex;
+  gap: 10px;
   flex-wrap: wrap;
-  gap: 15px;
-  padding: 10px 0;
-  align-items: center;
-  font-size: 13px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
 }
-.control-group { display: flex; align-items: center; gap: 10px; }
-.btn-sm {
-  padding: 5px 10px;
-  background: #f5f5f5;
-  border: 1px solid #ccc;
-  font-size: 12px;
+.action-btn {
+  padding: 10px 15px;
+  background: white;
+  border: 1px solid #4a5c88;
+  color: #4a5c88;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
 }
-.btn-sm:hover { background: #e9e9e9; }
+.action-btn:hover {
+  background: #f0f4f8;
+}
+.action-btn.active-tool {
+  background: #e0f0ff;
+  border-color: #007bff;
+}
 
-/* Preview */
+/* Preview Area */
 .preview-wrapper {
-  background: #e0e0e0;
-  min-height: 400px;
+  background: #e2e2e2; /* PDFResizer Gray Background */
   border: 1px solid #ccc;
-  margin-top: 15px;
+  min-height: 500px;
   display: flex;
   justify-content: center;
+  padding: 20px 0;
 }
 .preview-scroll {
-  overflow: auto;
-  padding: 20px;
   width: 100%;
+  overflow: auto;
   text-align: center;
 }
 .page-wrapper {
   position: relative;
   background: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
   display: inline-block;
-  margin: 0 auto;
 }
-.page-label { display: none; } /* Hidden for cleaner look */
+.page-label { display: none; }
 
-/* ===== PDFResizer Style Crop Box & Handles ===== */
+/* ===== Crop Box & Handles (Black & White) ===== */
 .crop-box {
   position: absolute;
   border: 1px dashed #ffffff;
@@ -243,42 +216,69 @@ body {
 .crop-box .handle.w { left: -4px; top: calc(50% - 3px); cursor: w-resize; }
 .crop-box .handle.e { right: -4px; top: calc(50% - 3px); cursor: e-resize; }
 
-/* Crop Info */
-.crop-info {
-  padding: 10px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  margin-top: 15px;
-  font-size: 13px;
-  color: #555;
-  text-align: center;
+/* Action Buttons Below Image */
+.action-panel {
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  margin-top: 20px;
+  background: #fdfdfd;
 }
-.crop-coords { color: #d9534f; font-weight: bold; margin-top: 5px; }
-
-/* Extra Sections (Hidden to match simple style, or customized) */
-.how-it-works, .features, .faq-section {
-  display: none; /* છુપાવી દીધું છે જેથી સાઇટ એકદમ સિમ્પલ દેખાય */
+.action-panel p { margin-bottom: 15px; font-size: 14px; }
+.big-action-btn {
+  background: #4a5c88;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: block;
+  margin: 20px 0 0 auto;
 }
+.big-action-btn:hover { background: #3b4a6e; }
 
-/* Footer */
+/* ===== SEO Text (Bottom Content) ===== */
+.seo-content {
+  max-width: 800px;
+  margin: 50px 0;
+  font-size: 14px;
+  color: #333;
+}
+.seo-content h2 {
+  font-weight: normal;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+.seo-content h3 {
+  font-weight: normal;
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+.seo-content p { margin-bottom: 15px; }
+.seo-content ol, .seo-content ul { padding-left: 20px; margin-bottom: 15px; }
+.seo-content li { margin-bottom: 8px; }
+
+/* Hide unwanted sections */
+.how-it-works, .features, .faq-section { display: none; }
+
+/* ===== Footer ===== */
 .footer {
-  background: #f5f5f5;
   border-top: 1px solid #ddd;
-  color: #666;
-  padding: 30px 0;
-  margin-top: 40px;
+  background: #f5f5f5;
+  padding: 20px 0;
   font-size: 13px;
+  color: #666;
 }
 .footer-inner {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
+  align-items: center;
 }
 .footer-links a {
   color: #0056b3;
   text-decoration: none;
-  margin-right: 15px;
+  margin-left: 15px;
 }
 .footer-links a:hover { text-decoration: underline; }
 
@@ -286,4 +286,5 @@ body {
 @media (max-width: 768px) {
   .upload-zone { padding: 40px 15px; }
   .pdf-resizer-menu a { padding: 10px; font-size: 12px; }
+  .footer-inner { flex-direction: column; gap: 10px; text-align: center; }
 }
