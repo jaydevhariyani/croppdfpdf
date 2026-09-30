@@ -1,4 +1,4 @@
-/* CropPDFPDF - Main Tool Script */
+/* CropPDFPDF - Main Tool Script - FIXED VERSION */
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const state = {
@@ -7,8 +7,8 @@ const state = {
   fileName: '',
   numPages: 0,
   scale: 1.0,
-  pages: [],          // only page 1 for preview
-  cropBox: null,      // single crop box {x, y, w, h} relative to page 1 canvas
+  pages: [],
+  cropBox: null,
   isDrawing: false,
   isResizing: false,
   isDragging: false,
@@ -17,7 +17,6 @@ const state = {
   currentBox: null,
   resizeHandle: null
 };
-
 
 // DOM refs
 const uploadZone = document.getElementById('uploadZone');
@@ -30,44 +29,34 @@ const pageCountEl = document.getElementById('pageCount');
 const cropBtn = document.getElementById('cropBtn');
 const resetBtn = document.getElementById('resetBtn');
 const zoomRange = document.getElementById('zoomRange');
-
 const zoomValue = document.getElementById('zoomValue');
 const cropCoords = document.getElementById('cropCoords');
-const menuToggle = document.getElementById('menuToggle');
-const wmEnable = document.getElementById('wmEnable');
-const wmOptions = document.getElementById('wmOptions');
-const wmText = document.getElementById('wmText');
-const wmPosition = document.getElementById('wmPosition');
-const wmOpacity = document.getElementById('wmOpacity');
-const wmOpacityVal = document.getElementById('wmOpacityVal');
-const wmSize = document.getElementById('wmSize');
-const wmSizeVal = document.getElementById('wmSizeVal');
-
 
 // ===== Upload Handling =====
-uploadBtn.addEventListener('click', () => pdfInput.click());
-uploadZone.addEventListener('click', (e) => {
-  if (e.target === uploadZone || e.target.closest('.upload-zone')) pdfInput.click();
-});
+if(uploadBtn) uploadBtn.addEventListener('click', () => pdfInput.click());
 
-uploadZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  uploadZone.classList.add('dragover');
-});
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
-uploadZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  uploadZone.classList.remove('dragover');
-  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-});
+if(uploadZone) {
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+}
 
-pdfInput.addEventListener('change', () => {
-  if (pdfInput.files.length) handleFile(pdfInput.files[0]);
-});
+if(pdfInput) {
+    pdfInput.addEventListener('change', () => {
+      if (pdfInput.files.length) handleFile(pdfInput.files[0]);
+    });
+}
 
 async function handleFile(file) {
   if (file.type !== 'application/pdf') {
-    alert('Please upload a PDF file.');
+    alert('Please upload a valid PDF file.');
     return;
   }
   state.fileName = file.name;
@@ -75,10 +64,18 @@ async function handleFile(file) {
   try {
     state.pdfDoc = await pdfjsLib.getDocument({ data: state.pdfBytes.slice(0) }).promise;
     state.numPages = state.pdfDoc.numPages;
-    fileNameEl.textContent = state.fileName;
-    pageCountEl.textContent = `${state.numPages} page${state.numPages > 1 ? 's' : ''}`;
-    uploadZone.style.display = 'none';
-    workspace.style.display = 'block';
+    if(fileNameEl) fileNameEl.textContent = state.fileName;
+    if(pageCountEl) pageCountEl.textContent = `${state.numPages} page${state.numPages > 1 ? 's' : ''}`;
+    
+    if(uploadZone) uploadZone.style.display = 'none';
+    if(workspace) workspace.style.display = 'block';
+    
+    // Reset crop button state
+    if(cropBtn) {
+        cropBtn.disabled = true;
+        cropBtn.innerText = "Crop files! »";
+    }
+    
     await renderAllPages();
   } catch (err) {
     console.error(err);
@@ -86,25 +83,18 @@ async function handleFile(file) {
   }
 }
 
-// ===== Render ONLY First Page (fast even for 500+ page PDFs) =====
+// ===== Render ONLY First Page =====
 async function renderAllPages() {
+  if(!pagesContainer) return;
   pagesContainer.innerHTML = '';
   state.pages = [];
   state.cropBox = null;
 
-  // Only render page 1 — like an open book on the table
   const page = await state.pdfDoc.getPage(1);
   const viewport = page.getViewport({ scale: state.scale });
   const wrapper = document.createElement('div');
   wrapper.className = 'page-wrapper';
   wrapper.dataset.page = 1;
-
-  const label = document.createElement('div');
-  label.className = 'page-label';
-  label.textContent = state.numPages > 1
-    ? `Page 1 of ${state.numPages}  •  Crop will apply to all pages`
-    : `Page 1`;
-  wrapper.appendChild(label);
 
   const canvas = document.createElement('canvas');
   canvas.width = viewport.width;
@@ -116,13 +106,10 @@ async function renderAllPages() {
   pagesContainer.appendChild(wrapper);
 
   state.pages.push({ canvas, wrapper, pageNum: 1, viewport, page });
-
-  // Mouse events for crop selection (only on page 1)
   setupCropEvents(wrapper, canvas);
 }
 
-
-// ===== Crop Selection Logic (single page only) =====
+// ===== Crop Selection Logic =====
 function setupCropEvents(wrapper, canvas) {
   canvas.addEventListener('mousedown', (e) => {
     if (e.button !== 0) return;
@@ -130,7 +117,6 @@ function setupCropEvents(wrapper, canvas) {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Click inside existing box → drag
     if (state.cropBox && isInsideBox(x, y, state.cropBox)) {
       state.isDragging = true;
       state.startX = x - state.cropBox.x;
@@ -139,15 +125,14 @@ function setupCropEvents(wrapper, canvas) {
       return;
     }
 
-    // Start new selection
     state.isDrawing = true;
     state.startX = x;
     state.startY = y;
 
-    // Clear previous box
     const old = wrapper.querySelector('.crop-box');
     if (old) old.remove();
     state.cropBox = null;
+    if(cropBtn) cropBtn.disabled = true;
 
     state.currentBox = createCropBoxEl(wrapper);
     updateBox(state.currentBox, x, y, 0, 0);
@@ -200,10 +185,11 @@ function onMouseUp() {
       if (box.w > 5 && box.h > 5) {
         state.cropBox = box;
         addResizeHandles(state.currentBox);
-        cropBtn.disabled = false;
+        if(cropBtn) cropBtn.disabled = false; // Enable download button
       } else {
         state.currentBox.remove();
         state.cropBox = null;
+        if(cropBtn) cropBtn.disabled = true;
       }
     }
   }
@@ -224,14 +210,8 @@ function handleResize(e, pageData) {
 
   if (handle.includes('e')) w = x - bx;
   if (handle.includes('s')) h = y - by;
-  if (handle.includes('w')) {
-    w = bx + w - x;
-    bx = x;
-  }
-  if (handle.includes('n')) {
-    h = by + h - y;
-    by = y;
-  }
+  if (handle.includes('w')) { w = bx + w - x; bx = x; }
+  if (handle.includes('n')) { h = by + h - y; by = y; }
 
   w = Math.max(10, w);
   h = Math.max(10, h);
@@ -281,16 +261,17 @@ function addResizeHandles(boxEl) {
 }
 
 function updateCoordsDisplay(x, y, w, h) {
-  cropCoords.textContent = `X: ${Math.round(x)}  Y: ${Math.round(y)}  W: ${Math.round(w)}  H: ${Math.round(h)}`;
+  if(cropCoords) cropCoords.textContent = `X: ${Math.round(x)}  Y: ${Math.round(y)}  W: ${Math.round(w)}  H: ${Math.round(h)}`;
 }
 
-
 // ===== Zoom =====
-zoomRange.addEventListener('input', async () => {
-  state.scale = parseFloat(zoomRange.value);
-  zoomValue.textContent = Math.round(state.scale * 100) + '%';
-  if (state.pdfDoc) await renderAllPages();
-});
+if(zoomRange) {
+    zoomRange.addEventListener('input', async () => {
+      state.scale = parseFloat(zoomRange.value);
+      if(zoomValue) zoomValue.textContent = Math.round(state.scale * 100) + '%';
+      if (state.pdfDoc) await renderAllPages();
+    });
+}
 
 document.getElementById('fitWidthBtn')?.addEventListener('click', async () => {
   if (!state.pages.length) return;
@@ -298,168 +279,102 @@ document.getElementById('fitWidthBtn')?.addEventListener('click', async () => {
   const firstPage = await state.pdfDoc.getPage(1);
   const vp = firstPage.getViewport({ scale: 1 });
   state.scale = containerWidth / vp.width;
-  zoomRange.value = state.scale;
-  zoomValue.textContent = Math.round(state.scale * 100) + '%';
+  if(zoomRange) zoomRange.value = state.scale;
+  if(zoomValue) zoomValue.textContent = Math.round(state.scale * 100) + '%';
   await renderAllPages();
 });
 
 document.getElementById('fitPageBtn')?.addEventListener('click', async () => {
   state.scale = 1;
-  zoomRange.value = 1;
-  zoomValue.textContent = '100%';
+  if(zoomRange) zoomRange.value = 1;
+  if(zoomValue) zoomValue.textContent = '100%';
   await renderAllPages();
 });
 
-// ===== Watermark UI =====
-wmEnable.addEventListener('change', () => {
-  wmOptions.style.display = wmEnable.checked ? 'flex' : 'none';
-});
-wmOpacity.addEventListener('input', () => {
-  wmOpacityVal.textContent = wmOpacity.value + '%';
-});
-wmSize.addEventListener('input', () => {
-  wmSizeVal.textContent = wmSize.value;
-});
-
-
-// ===== Crop & Download (with optional Watermark) =====
-// Crop box is drawn on Page 1 only → same relative crop applied to ALL pages
-cropBtn.addEventListener('click', async () => {
-  if (!state.cropBox) {
-    alert('Please draw a crop selection on the first page.');
-    return;
-  }
-
-  cropBtn.disabled = true;
-  cropBtn.innerHTML = '<span class="spinner"></span> Processing...';
-
-  try {
-    const { PDFDocument, rgb, StandardFonts, degrees } = PDFLib;
-    const srcDoc = await PDFDocument.load(state.pdfBytes);
-    const newDoc = await PDFDocument.create();
-    const font = await newDoc.embedFont(StandardFonts.HelveticaBold);
-
-    const addWm = wmEnable.checked && wmText.value.trim().length > 0;
-    const wmStr = wmText.value.trim() || 'CropPDFPDF';
-    const opacity = parseInt(wmOpacity.value) / 100;
-    const fontSize = parseInt(wmSize.value);
-    const position = wmPosition.value;
-
-    // Relative crop from page 1 canvas (0–1)
-    const page1Canvas = state.pages[0].canvas;
-    const rel = {
-      x: state.cropBox.x / page1Canvas.width,
-      y: state.cropBox.y / page1Canvas.height,
-      w: state.cropBox.w / page1Canvas.width,
-      h: state.cropBox.h / page1Canvas.height
-    };
-
-    for (let i = 1; i <= state.numPages; i++) {
-      const [copiedPage] = await newDoc.copyPages(srcDoc, [i - 1]);
-      const page = srcDoc.getPage(i - 1);
-      const { width, height } = page.getSize();
-
-      // Apply same relative crop to every page
-      const cropX = rel.x * width;
-      const cropW = rel.w * width;
-      const cropH = rel.h * height;
-      const cropY = height - (rel.y * height) - cropH;
-
-      copiedPage.setCropBox(cropX, cropY, cropW, cropH);
-      copiedPage.setMediaBox(cropX, cropY, cropW, cropH);
-
-      // Optional watermark
-      if (addWm) {
-        const pageW = cropW;
-        const pageH = cropH;
-        const textWidth = font.widthOfTextAtSize(wmStr, fontSize);
-        let x = 0, y = 0, rotate = 0;
-
-        switch (position) {
-          case 'center':
-            x = cropX + (pageW - textWidth) / 2;
-            y = cropY + pageH / 2 - fontSize / 3;
-            break;
-          case 'diagonal':
-            x = cropX + pageW * 0.15;
-            y = cropY + pageH * 0.25;
-            rotate = 35;
-            break;
-          case 'bottom-right':
-            x = cropX + pageW - textWidth - 20;
-            y = cropY + 20;
-            break;
-          case 'bottom-left':
-            x = cropX + 20;
-            y = cropY + 20;
-            break;
-          case 'top-right':
-            x = cropX + pageW - textWidth - 20;
-            y = cropY + pageH - fontSize - 15;
-            break;
-          case 'top-left':
-            x = cropX + 20;
-            y = cropY + pageH - fontSize - 15;
-            break;
-        }
-
-        copiedPage.drawText(wmStr, {
-          x,
-          y,
-          size: fontSize,
-          font,
-          color: rgb(0.4, 0.4, 0.4),
-          opacity,
-          rotate: degrees(rotate)
-        });
+// ===== Crop & Download =====
+if(cropBtn) {
+    cropBtn.addEventListener('click', async () => {
+      if (!state.cropBox) {
+        alert('Please draw a crop selection on the image first.');
+        return;
       }
 
-      newDoc.addPage(copiedPage);
-    }
+      cropBtn.disabled = true;
+      cropBtn.innerText = 'Processing...';
 
-    const pdfBytes = await newDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const suffix = addWm ? '_cropped_wm.pdf' : '_cropped.pdf';
-    a.download = state.fileName.replace(/\.pdf$/i, '') + suffix;
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error(err);
-    alert('Processing failed. Please try again.');
-  } finally {
-    cropBtn.disabled = false;
-    cropBtn.textContent = 'Crop & Download';
-  }
-});
+      try {
+        const { PDFDocument } = PDFLib;
+        const srcDoc = await PDFDocument.load(state.pdfBytes);
+        const newDoc = await PDFDocument.create();
 
+        const page1Canvas = state.pages[0].canvas;
+        const rel = {
+          x: state.cropBox.x / page1Canvas.width,
+          y: state.cropBox.y / page1Canvas.height,
+          w: state.cropBox.w / page1Canvas.width,
+          h: state.cropBox.h / page1Canvas.height
+        };
 
+        for (let i = 1; i <= state.numPages; i++) {
+          const [copiedPage] = await newDoc.copyPages(srcDoc, [i - 1]);
+          const page = srcDoc.getPage(i - 1);
+          const { width, height } = page.getSize();
 
-// ===== Reset =====
-resetBtn.addEventListener('click', () => {
-  state.pdfDoc = null;
-  state.pdfBytes = null;
-  state.pages = [];
-  state.cropBox = null;
-  pagesContainer.innerHTML = '';
-  workspace.style.display = 'none';
-  uploadZone.style.display = 'block';
-  pdfInput.value = '';
-  cropBtn.disabled = true;
-  cropCoords.textContent = '';
-  state.scale = 1;
-  zoomRange.value = 1;
-  zoomValue.textContent = '100%';
-  if (wmEnable) wmEnable.checked = false;
-  if (wmOptions) wmOptions.style.display = 'none';
-});
+          const cropX = rel.x * width;
+          const cropW = rel.w * width;
+          const cropH = rel.h * height;
+          const cropY = height - (rel.y * height) - cropH;
 
+          copiedPage.setCropBox(cropX, cropY, cropW, cropH);
+          copiedPage.setMediaBox(cropX, cropY, cropW, cropH);
+          newDoc.addPage(copiedPage);
+        }
 
-// ===== Mobile menu =====
-if (menuToggle) {
-  menuToggle.addEventListener('click', () => {
-    document.querySelector('.nav').classList.toggle('open');
-  });
+        const pdfBytes = await newDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = state.fileName.replace(/\.pdf$/i, '') + '_cropped.pdf';
+        document.body.appendChild(a);
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+      } catch (err) {
+        console.error(err);
+        alert('Processing failed. Please try again.');
+      } finally {
+        cropBtn.disabled = false;
+        cropBtn.innerText = 'Crop files! »';
+      }
+    });
+}
+
+// ===== Reset (Start Over) =====
+if(resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      // Clear data
+      state.pdfDoc = null;
+      state.pdfBytes = null;
+      state.pages = [];
+      state.cropBox = null;
+      
+      // Reset UI
+      if(pagesContainer) pagesContainer.innerHTML = '';
+      if(workspace) workspace.style.display = 'none';
+      if(uploadZone) uploadZone.style.display = 'block';
+      if(pdfInput) pdfInput.value = '';
+      if(cropBtn) {
+          cropBtn.disabled = true;
+          cropBtn.innerText = 'Crop files! »';
+      }
+      if(cropCoords) cropCoords.textContent = '';
+      
+      // Reset Zoom
+      state.scale = 1;
+      if(zoomRange) zoomRange.value = 1;
+      if(zoomValue) zoomValue.textContent = '100%';
+    });
 }
