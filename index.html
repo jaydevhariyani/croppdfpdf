@@ -3,265 +3,174 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CropPDFPDF – Free Online PDF Crop Tool for Shipping Labels | Flipkart, Meesho, Amazon, Myntra, Ajio</title>
-  <meta name="description" content="CropPDFPDF is a free, fast & secure online PDF crop tool specially built for e-commerce shipping labels. Crop Flipkart, Meesho, Myntra, Ajio, Amazon, Limeroad, Nykaa & eBay labels in one click. All pages preview + resizable crop box. No signup required.">
-  <meta name="keywords" content="PDF crop, crop PDF online, shipping label crop, Flipkart label crop, Meesho shipping label, Amazon label crop, Myntra label, Ajio label, Limeroad, Nykaa, eBay shipping label, free PDF cropper, croppdfpdf">
-  <meta name="author" content="CropPDFPDF">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://croppdfpdf.com/">
-  <meta property="og:title" content="CropPDFPDF – Free PDF Crop Tool for Shipping Labels">
-  <meta property="og:description" content="Crop shipping labels from Flipkart, Meesho, Amazon, Myntra & more. All pages preview with resizable crop box. Free & secure.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
+  <title>Crop PDF files online free - CropPDFPDF</title>
+  <meta name="description" content="Free online tool to crop PDF files. Easily trim margins, crop Flipkart/Amazon shipping labels, and change PDF canvas size visually.">
+  <meta name="keywords" content="PDF crop, crop PDF online, shipping label crop, Flipkart label crop, Amazon label crop, free PDF cropper">
   <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <!-- Schema Markup for SEO/FAQ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{
-      "@type": "Question",
-      "name": "Is my PDF file safe and private?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, 100% private. All PDF processing happens directly inside your web browser. Your shipping label files never leave your device."
-      }
-    }, {
-      "@type": "Question",
-      "name": "How does crop on all pages work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You draw the crop selection box once on the first page preview, and the exact same margin/crop dimensions are applied automatically to all pages in the PDF."
-      }
-    }]
-  }
-  </script>
 </head>
 <body>
-  <!-- Adsterra placement moved safely inside body/non-blocking or suitable container area -->
+  <!-- Adsterra placement -->
   <script src="https://pl31303384.profitableratecpmnetwork.com/77/9e/eb/779eebc6191823cbfc436bf0c073f1c1.js"></script>
 
-  <style>
-  /* PDFResizer જેવું મેનુ */
-  .pdf-resizer-menu { background: #666677; display: flex; flex-wrap: wrap; justify-content: center; padding: 0; margin-bottom: 30px; font-family: Arial, sans-serif; }
-  .pdf-resizer-menu a { color: white; text-decoration: none; padding: 12px 15px; font-size: 14px; border-right: 1px solid #777788; }
-  .pdf-resizer-menu a:hover { background: #555566; }
-  .pdf-resizer-menu a.active { background: #333344; font-weight: bold; }
-</style>
-
-<div class="pdf-resizer-menu">
-  <a href="#">Merge PDF</a>
-  <a href="#">Split PDF</a>
-  <a href="#">Resize PDF</a>
-  <a href="#">Convert PDF</a>
-  <a href="#" class="active">Crop PDF</a>
-  <a href="#">Rotate PDF</a>
-  <a href="#">Optimize PDF</a>
-</div>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fa-solid fa-file-pdf"></i></span>
+        <span class="logo-text">CropPDFPDF.com</span>
+      </a>
+    </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Free Online <span>PDF Crop</span> Tool for Shipping Labels</h1>
-      <p class="hero-sub">Crop Flipkart, Meesho, Myntra, Ajio, Amazon, Limeroad, Nykaa & eBay shipping labels in seconds. First page preview • One crop applies to all pages • Instant download.</p>
+  <!-- Dark Gray Menu -->
+  <div class="pdf-resizer-menu">
+    <a href="#">Merge PDF</a>
+    <a href="#">Split PDF</a>
+    <a href="#">Resize PDF</a>
+    <a href="#">Convert PDF</a>
+    <a href="#" class="active">Crop PDF</a>
+    <a href="#">Rotate PDF</a>
+    <a href="#">Optimize PDF</a>
+    <a href="#">Reorder PDF</a>
+    <a href="#">Delete pages</a>
+    <a href="#">N-UP</a>
+    <a href="#">Page numbers</a>
+  </div>
 
-      <div class="platform-badges">
-        <span>Flipkart</span><span>Meesho</span><span>Amazon</span><span>Myntra</span>
-        <span>Ajio</span><span>Limeroad</span><span>Nykaa</span><span>eBay</span>
+  <main class="container tool-section">
+    <h1 class="page-title" id="mainTitle">Crop PDF files</h1>
+
+    <!-- Toolbar (Visual) -->
+    <div class="toolbar-actions" id="toolBar">
+      <div class="action-btn"><i class="fa-solid fa-object-ungroup"></i><br>Split</div>
+      <div class="action-btn"><i class="fa-solid fa-compress"></i><br>Resize</div>
+      <div class="action-btn"><i class="fa-solid fa-file-export"></i><br>Convert</div>
+      <div class="action-btn active-tool"><i class="fa-solid fa-crop-simple"></i><br>Crop</div>
+      <div class="action-btn"><i class="fa-solid fa-rotate-right"></i><br>Rotate</div>
+      <div class="action-btn"><i class="fa-solid fa-file-shield"></i><br>Optimize</div>
+      <div class="action-btn"><i class="fa-solid fa-circle-half-stroke"></i><br>Grayscale</div>
+      <div class="action-btn"><i class="fa-solid fa-circle-notch"></i><br>Invert</div>
+      <div class="action-btn"><i class="fa-solid fa-arrow-down-a-z"></i><br>Reorder</div>
+      <div class="action-btn"><i class="fa-solid fa-trash-can"></i><br>Delete</div>
+    </div>
+
+    <!-- Upload Zone -->
+    <div id="uploadZone">
+      <div class="upload-zone">
+        <h2>Choose, paste or drag files here</h2>
+        <div style="margin: 30px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <button class="btn btn-primary" id="uploadBtn">Choose files</button>
+          <span style="font-size: 14px; opacity: 0.8;">No file chosen</span>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf" hidden>
+      </div>
+
+      <div style="margin-top: 20px; font-size: 13px; color: #666; max-width: 800px; margin-left: auto; margin-right: auto; text-align: left;">
+        <p>Maximum combined file size: 100MB, up to 500 files<br>
+        Supported types: PDF, DOC, DOCX, ODT, PPT, PPTX, EPUB<br>
+        (other files will be converted to PDF automatically)</p>
+        <p style="margin-top: 15px;">All files are automatically deleted 1 hour after upload.</p>
+        
+        <button class="big-action-btn" onclick="document.getElementById('pdfInput').click()" style="margin: 20px 0 0 0; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload files!
+        </button>
       </div>
     </div>
-  </section>
 
-  <!-- Main Tool -->
-  <main class="tool-section">
-    <div class="container">
-      <div class="tool-card">
-        <!-- Upload Zone -->
-        <div class="upload-zone" id="uploadZone">
-          <div class="upload-icon">📄</div>
-          <h2>Drop your PDF here or click to upload</h2>
-          <p>Supports multi-page PDFs • Max recommended 50 pages • 100% private (processed in your browser)</p>
-          <input type="file" id="pdfInput" accept="application/pdf" hidden>
-          <button class="btn btn-primary" id="uploadBtn">Select PDF</button>
+    <!-- Workspace (Hidden until file is uploaded) -->
+    <div class="workspace" id="workspace" style="display:none;">
+      
+      <!-- File Info -->
+      <div class="workspace-header">
+        <div>
+          <i class="fa-regular fa-file-pdf" style="font-size: 20px; color: #555; vertical-align: middle;"></i>
+          <span class="file-name" id="fileName" style="margin-left: 10px;">document.pdf</span>
+          <span class="page-count" id="pageCount">0 pages</span>
         </div>
+        <button class="btn btn-primary" id="resetBtn" style="font-size: 12px; padding: 5px 10px;"><i class="fa-solid fa-rotate-left"></i> Start Over</button>
+      </div>
 
-        <!-- Tool Workspace (hidden until PDF loaded) -->
-        <div class="workspace" id="workspace" style="display:none;">
-          <div class="workspace-header">
-            <div class="file-info">
-              <span class="file-name" id="fileName">document.pdf</span>
-              <span class="page-count" id="pageCount">0 pages</span>
-            </div>
-            <div class="actions">
-              <button class="btn btn-outline" id="resetBtn">Reset</button>
-              <button class="btn btn-primary" id="cropBtn" disabled>Crop & Download</button>
-            </div>
-          </div>
-
-          <!-- Controls -->
-          <div class="controls">
-            <div class="control-group">
-              <label>Page Zoom</label>
-              <input type="range" id="zoomRange" min="0.5" max="2" step="0.1" value="1">
-              <span id="zoomValue">100%</span>
-            </div>
-            <div class="control-group">
-              <button class="btn btn-sm" id="fitWidthBtn">Fit Width</button>
-              <button class="btn btn-sm" id="fitPageBtn">Fit Page</button>
-            </div>
-            <div class="control-group" style="margin-left:auto;">
-              <span class="page-hint">Only first page shown • Crop applies to all pages</span>
-            </div>
-          </div>
-
-
-          <!-- Watermark Controls -->
-          <div class="controls watermark-controls">
-            <div class="control-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="wmEnable"> Add Watermark
-              </label>
-            </div>
-            <div class="control-group wm-options" id="wmOptions" style="display:none;">
-              <input type="text" id="wmText" placeholder="Watermark text" value="CropPDFPDF" class="wm-input">
-              <select id="wmPosition">
-                <option value="center">Center</option>
-                <option value="diagonal">Diagonal</option>
-                <option value="bottom-right">Bottom Right</option>
-                <option value="bottom-left">Bottom Left</option>
-                <option value="top-right">Top Right</option>
-                <option value="top-left">Top Left</option>
-              </select>
-              <label>Opacity <input type="range" id="wmOpacity" min="10" max="80" value="30"> <span id="wmOpacityVal">30%</span></label>
-              <label>Size <input type="range" id="wmSize" min="12" max="72" value="28"> <span id="wmSizeVal">28</span></label>
-            </div>
-          </div>
-
-
-          <!-- Preview Area -->
-          <div class="preview-wrapper">
-            <div class="preview-scroll" id="previewScroll">
-              <div class="pages-container" id="pagesContainer">
-                <!-- Pages will be rendered here -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Crop Info Bar -->
-          <div class="crop-info" id="cropInfo">
-            <span>Draw crop box on the first page (like a book on the table). Same area will be cropped from every page.</span>
-            <div class="crop-coords" id="cropCoords"></div>
-          </div>
-
+      <!-- Controls -->
+      <div class="controls">
+        <div class="control-group">
+          <label>Page Zoom:</label>
+          <input type="range" id="zoomRange" min="0.5" max="2" step="0.1" value="1">
+          <span id="zoomValue">100%</span>
+        </div>
+        <div class="control-group">
+          <button class="btn btn-sm" id="fitWidthBtn">Fit Width</button>
+          <button class="btn btn-sm" id="fitPageBtn">Fit Page</button>
         </div>
       </div>
 
-      <!-- How it works -->
-      <div style="max-width: 800px; margin: 40px auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-  <h2 style="font-weight: normal; font-size: 24px; margin-bottom: 20px;">Online PDF crop tool</h2>
-  <p>Free and easy to use online tool for visual PDF document cropping / changing canvas size. With this tool, you can easily crop scans, Flipkart labels, logos, and any other PDFs.</p>
-  
-  <h3 style="font-weight: normal; font-size: 20px; margin-top: 30px;">How to Crop a PDF</h3>
-  <ol style="padding-left: 20px;">
-    <li>Upload your document. If you wish to upload multiple files simultaneously, please ensure that they are of the same size and margins.</li>
-    <li>If you want to select the part of the document for cropping manually, mark it in the preview window and then choose the Crop option.</li>
-    <li>It is important to note that all pages in the processed documents will be cropped equally.</li>
-  </ol>
-</div>
-        </div>
-      </section>
-
-      <!-- Added SEO Content / FAQ Section (Crucial for Google Ranking) -->
-      <section class="faq-section" style="margin: 40px 0; padding: 20px; background: #f9f9f9; border-radius: 8px;">
-        <h2>Frequently Asked Questions about Shipping Label Cropping</h2>
-        <div style="margin-top: 15px;">
-          <h3>Is my PDF file safe and private?</h3>
-          <p>Yes, 100% private. All PDF processing happens directly inside your web browser using client-side libraries. Your shipping label files never leave your device or get uploaded to any server.</p>
-          
-          <h3 style="margin-top: 15px;">How does crop on all pages work?</h3>
-          <p>You draw the crop selection box once on the first page preview, and the exact same margin/crop dimensions are applied automatically to all pages in your bulk shipping label PDF.</p>
-
-          <h3 style="margin-top: 15px;">Does it support thermal printer label sizes?</h3>
-          <p>Yes, you can custom-resize the crop box to fit 4x6 thermal printer label dimensions or standard A4/A5 shipping label cutouts used by Flipkart, Meesho, and Amazon.</p>
-        </div>
-      </section>
-
-      <!-- Features -->
-      <section class="features">
-        <h2>Why CropPDFPDF?</h2>
-        <div class="feature-grid">
-          <div class="feature">
-            <div class="feature-icon">🖼</div>
-            <h3>First Page Preview</h3>
-            <p>Only the first page is shown (fast even for 500-page PDFs). Zoom in/out for precision.</p>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">📐</div>
-            <h3>Resizable Selection Box</h3>
-            <p>Drag, move and resize the crop box freely – square, long, short or wide.</p>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">📦</div>
-            <h3>One Crop → All Pages</h3>
-            <p>Draw once on page 1. Same crop is applied to every page automatically.</p>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">🔒</div>
-            <h3>100% Private</h3>
-            <p>All processing happens in your browser. Files never leave your device.</p>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">⚡</div>
-            <h3>Fast & Free</h3>
-            <p>No signup, no watermark, no limits on normal use. Instant results.</p>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">🛒</div>
-            <h3>E-commerce Ready</h3>
-            <p>Optimized for Flipkart, Meesho, Myntra, Ajio, Amazon, Limeroad, Nykaa & eBay labels.</p>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">💧</div>
-            <h3>Add Watermark</h3>
-            <p>Optional text watermark with opacity, position & size controls. Perfect for branding or security.</p>
+      <!-- Preview Area -->
+      <div class="preview-wrapper">
+        <div class="preview-scroll" id="previewScroll">
+          <div class="pages-container" id="pagesContainer">
+            <!-- Canvas rendered here -->
           </div>
         </div>
-      </section>
+      </div>
 
+      <!-- Crop Info & Action Panel -->
+      <div class="action-panel">
+        <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #4a5c88;">Action: Crop to selection</div>
+        <div class="crop-info" id="cropInfo">
+          <span>Draw crop box on the document. The same area will be cropped from every page.</span>
+          <div class="crop-coords" id="cropCoords"></div>
+        </div>
+        
+        <button class="big-action-btn" id="cropBtn" disabled>Crop files! »</button>
+      </div>
+
+    </div>
+
+    <!-- SEO Content (Visible below tool) -->
+    <div class="seo-content" id="seoContent">
+      <h2>Online PDF crop tool</h2>
+      <p>Free and easy to use online tool for visual PDF document cropping / changing canvas size. With this tool, you can easily crop scans, Flipkart labels, Amazon labels, logos, and any other PDFs.</p>
+      <p>You can crop the PDF to a selected area, to try and remove all margins automatically. You can also use PDF cropper to increase visible margins, for example, to add extra space for annotations.</p>
+
+      <h3>How to Crop a PDF</h3>
+      <ol>
+        <li>Upload your document. If you wish to upload multiple files simultaneously, please ensure that they are of the same size and margins.</li>
+        <li>If you want to select the part of the document for cropping manually, mark it in the preview window and then choose the <i>Crop to selection</i> option.</li>
+        <li>It is important to note that all pages in the processed documents will be cropped equally. If you require different parts of each page to be cropped, we recommend splitting the file before manually cropping each page.</li>
+      </ol>
+
+      <h3>Cropping Options</h3>
+      <ul>
+        <li><b>Crop to selection:</b> Visually select the area you want to keep using the interactive cropping tool.</li>
+        <li><b>Label Cropping:</b> Use this PDF cropper to cut shipping labels, Flipkart labels, Meesho labels, and other e-commerce labels to the correct size. Upload your label PDF, use the visual crop tool to select just the label area, and download a perfectly sized label ready for printing.</li>
+      </ul>
+      <p><i>All files are processed securely in your browser and automatically deleted within 1 hour of upload.</i></p>
+
+      <h3>Frequently Asked Questions</h3>
+      <div style="margin-top: 20px; border-left: 3px solid #4a5c88; padding-left: 15px; background: #f9f9f9; padding-top: 15px; padding-bottom: 15px;">
+        <p><b>How do I crop a PDF online?</b><br>
+        Upload your PDF, then either drag to select the area you want to keep. Click the crop button to process.</p>
+        
+        <p style="margin-top: 15px;"><b>Does cropping apply to all pages in the PDF?</b><br>
+        Yes. The same crop settings are applied to all pages. If you need different crops for different pages, split the PDF first, crop individual pages, then merge them back together.</p>
+      </div>
     </div>
   </main>
 
-  <!-- Footer -->
+  <!-- Simple Footer -->
   <footer class="footer">
     <div class="container footer-inner">
-      <div class="footer-brand">
-        <div class="logo">
-          <span class="logo-icon">✂</span>
-          <span class="logo-text">Crop<span>PDF</span>PDF</span>
-        </div>
-        <p>Free online PDF crop tool built for e-commerce sellers who need clean shipping labels.</p>
-      </div>
+      <div>© croppdfpdf.com, 2026</div>
       <div class="footer-links">
-        <h4>Quick Links</h4>
-        <a href="index.html">Crop Tool</a>
+        <a href="index.html">Crop PDF</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact Us</a>
         <a href="privacy.html">Privacy Policy</a>
-      </div>
-      <div class="footer-platforms">
-        <h4>Supported Platforms</h4>
-        <p>Flipkart • Meesho • Amazon • Myntra • Ajio • Limeroad • Nykaa • eBay</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="container">
-        <p>© 2026 CropPDFPDF. All rights reserved. Made for sellers in India & beyond.</p>
       </div>
     </div>
   </footer>
@@ -269,11 +178,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-     
-       
-       
-         
-       
-    
-
