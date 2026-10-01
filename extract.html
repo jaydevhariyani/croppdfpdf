@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extract Images from PDF online - CropPDFPDF</title>
+  <meta name="description" content="Free online tool to extract all pages from a PDF as high-quality JPG images. Download all PDF pages in a ZIP file instantly.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- JSZip for downloading multiple images -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <script src="https://pl31303384.profitableratecpmnetwork.com/77/9e/eb/779eebc6191823cbfc436bf0c073f1c1.js"></script>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fa-solid fa-file-pdf"></i></span>
+        <span class="logo-text">CropPDFPDF.com</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="pdf-resizer-menu">
+    <a href="merge.html">Merge PDF</a>
+    <a href="split.html">Split PDF</a>
+    <a href="resize.html">Resize PDF</a>
+    <a href="convert.html">Convert PDF</a>
+    <a href="index.html">Crop PDF</a>
+    <a href="unlock.html">Unlock PDF</a>
+    <a href="extract.html" class="active">Extract Images</a>
+  </div>
+
+  <main class="container tool-section">
+    <h1 class="page-title">Extract PDF Pages to Images</h1>
+
+    <div class="toolbar-actions">
+      <div class="action-btn"><i class="fa-solid fa-lock-open"></i><br>Unlock</div>
+      <div class="action-btn active-tool"><i class="fa-solid fa-images"></i><br>Extract</div>
+      <div class="action-btn"><i class="fa-solid fa-crop-simple"></i><br>Crop</div>
+    </div>
+
+    <div id="uploadZone">
+      <div class="upload-zone">
+        <h2>Choose a PDF to extract pages as Images</h2>
+        <div style="margin: 30px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <button class="btn btn-primary" onclick="document.getElementById('pdfInput').click()">Choose file</button>
+          <span style="font-size: 14px; opacity: 0.8;">No file chosen</span>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf" hidden>
+      </div>
+    </div>
+
+    <div class="workspace" id="workspace" style="display:none; max-width: 800px; margin: 0 auto;">
+      <div class="workspace-header">
+        <div>
+          <i class="fa-solid fa-images" style="font-size: 20px; color: #4a5c88; vertical-align: middle;"></i>
+          <span class="file-name" id="fileName" style="margin-left: 10px; font-weight: bold;">document.pdf</span>
+        </div>
+        <button class="btn btn-primary" onclick="location.reload()" style="font-size: 12px; padding: 5px 10px;"><i class="fa-solid fa-rotate-left"></i> Start Over</button>
+      </div>
+
+      <div class="action-panel" style="text-align: center;">
+        <p style="font-weight: bold; color: #4a5c88; margin-bottom: 15px;">Ready to extract pages.</p>
+        <p style="font-size: 14px; color: #555;">We will convert every page of this PDF into a high-quality JPG image and pack them in a ZIP file for you.</p>
+
+        <button class="big-action-btn" id="extractBtn" style="margin: 20px auto 0;">Extract Images (ZIP) »</button>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="seo-content">
+      <h2>Extract Images from PDF</h2>
+      <p>Need to turn a multi-page PDF into separate image files? Our free PDF Image Extractor converts every page of your PDF document into high-resolution JPG files. This is incredibly useful for designers, students, and e-commerce sellers who need to upload PDF pages to websites that only accept image formats.</p>
+
+      <h3>How to convert PDF pages to JPG</h3>
+      <ol>
+        <li>Upload your PDF file using the blue selection box.</li>
+        <li>Click the "Extract Images (ZIP)" button.</li>
+        <li>Our tool will process each page, convert it into a crisp JPG, and download a single ZIP file containing all your images.</li>
+      </ol>
+
+      <h3>Frequently Asked Questions</h3>
+      <div style="margin-top: 20px; border-left: 3px solid #4a5c88; padding-left: 15px; background: #f9f9f9; padding-top: 15px; padding-bottom: 15px;">
+        <p><b>Does this extract embedded photos or the whole page?</b><br>
+        This tool renders the entire PDF page exactly as it looks and saves it as an image. This means all text, charts, and photos on the page will be captured in the final JPG.</p>
+        
+        <p style="margin-top: 15px;"><b>Are there any limits on how many pages I can extract?</b><br>
+        While there are no hard limits, since the processing is done in your browser, extremely large PDFs (over 100 pages) might take a minute or two to generate the ZIP file.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© croppdfpdf.com, 2026</div>
+      <div class="footer-links">
+        <a href="extract.html">Extract Images</a>
+        <a href="index.html">Crop PDF</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    
+    const pdfInput = document.getElementById('pdfInput');
+    const uploadZone = document.getElementById('uploadZone');
+    const workspace = document.getElementById('workspace');
+    const fileName = document.getElementById('fileName');
+    const extractBtn = document.getElementById('extractBtn');
+    let fileBytes = null;
+
+    pdfInput.addEventListener('change', async (e) => {
+      if(e.target.files.length > 0) {
+        fileName.innerText = e.target.files[0].name;
+        fileBytes = await e.target.files[0].arrayBuffer();
+        uploadZone.style.display = 'none';
+        workspace.style.display = 'block';
+      }
+    });
+
+    extractBtn.addEventListener('click', async () => {
+      extractBtn.disabled = true;
+      extractBtn.innerText = "Extracting Images... Please wait";
+
+      try {
+        const loadingTask = pdfjsLib.getDocument({ data: fileBytes });
+        const pdfDoc = await loadingTask.promise;
+        const zip = new JSZip();
+
+        for (let i = 1; i <= pdfDoc.numPages; i++) {
+          const page = await pdfDoc.getPage(i);
+          const viewport = page.getViewport({ scale: 2.0 }); // High resolution 
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          
+          const imgData = canvas.toDataURL("image/jpeg", 0.9).split(',')[1];
+          zip.file(`page_${i}.jpg`, imgData, {base64: true});
+        }
+
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        const url = URL.createObjectURL(zipBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName.innerText.replace('.pdf', '') + '_images.zip';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        extractBtn.innerText = "Extract Images (ZIP) »";
+        extractBtn.disabled = false;
+      } catch (error) {
+        console.error(error);
+        alert("An error occurred during extraction.");
+        extractBtn.innerText = "Extract Images (ZIP) »";
+        extractBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
