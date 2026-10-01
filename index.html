@@ -34,13 +34,12 @@
     <a href="split.html">Split PDF</a>
     <a href="resize.html">Resize PDF</a>
     <a href="convert.html">Convert PDF</a>
-    <a href="#" class="active">Crop PDF</a>
+    <a href="index.html" class="active">Crop PDF</a>
     <a href="rotate.html">Rotate PDF</a>
     <a href="optimize.html">Optimize PDF</a>
-    <a href="#">Reorder PDF</a>
-    <a href="#">Delete pages</a>
-    <a href="#">N-UP</a>
-    <a href="#">Page numbers</a>
+    <a href="edit.html">Edit PDF</a>
+    <a href="unlock.html">Unlock PDF</a>
+    <a href="extract.html">Extract Images</a>
   </div>
 
   <main class="container tool-section">
@@ -48,16 +47,16 @@
 
     <!-- Toolbar (Visual) -->
     <div class="toolbar-actions" id="toolBar">
-      <div class="action-btn"><i class="fa-solid fa-object-ungroup"></i><br>Split</div>
-      <div class="action-btn"><i class="fa-solid fa-compress"></i><br>Resize</div>
-      <div class="action-btn"><i class="fa-solid fa-file-export"></i><br>Convert</div>
       <div class="action-btn active-tool"><i class="fa-solid fa-crop-simple"></i><br>Crop</div>
-      <div class="action-btn"><i class="fa-solid fa-rotate-right"></i><br>Rotate</div>
-      <div class="action-btn"><i class="fa-solid fa-file-shield"></i><br>Optimize</div>
-      <div class="action-btn"><i class="fa-solid fa-circle-half-stroke"></i><br>Grayscale</div>
-      <div class="action-btn"><i class="fa-solid fa-circle-notch"></i><br>Invert</div>
-      <div class="action-btn"><i class="fa-solid fa-arrow-down-a-z"></i><br>Reorder</div>
-      <div class="action-btn"><i class="fa-solid fa-trash-can"></i><br>Delete</div>
+      <div class="action-btn" onclick="window.location.href='merge.html'"><i class="fa-solid fa-object-group"></i><br>Merge</div>
+      <div class="action-btn" onclick="window.location.href='split.html'"><i class="fa-solid fa-object-ungroup"></i><br>Split</div>
+      <div class="action-btn" onclick="window.location.href='resize.html'"><i class="fa-solid fa-compress"></i><br>Resize</div>
+      <div class="action-btn" onclick="window.location.href='convert.html'"><i class="fa-solid fa-file-export"></i><br>Convert</div>
+      <div class="action-btn" onclick="window.location.href='rotate.html'"><i class="fa-solid fa-rotate-right"></i><br>Rotate</div>
+      <div class="action-btn" onclick="window.location.href='optimize.html'"><i class="fa-solid fa-file-shield"></i><br>Optimize</div>
+      <div class="action-btn" onclick="window.location.href='edit.html'"><i class="fa-solid fa-pen-to-square"></i><br>Edit</div>
+      <div class="action-btn" onclick="window.location.href='unlock.html'"><i class="fa-solid fa-lock-open"></i><br>Unlock</div>
+      <div class="action-btn" onclick="window.location.href='extract.html'"><i class="fa-solid fa-images"></i><br>Extract</div>
     </div>
 
     <!-- Upload Zone -->
