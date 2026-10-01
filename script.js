@@ -1,4 +1,4 @@
-/* CropPDFPDF - Main Tool Script - FIXED VERSION */
+/* CropPDFPDF - Main Tool Script - MOBILE TOUCH SUPPORT ADDED */
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const state = {
@@ -70,7 +70,6 @@ async function handleFile(file) {
     if(uploadZone) uploadZone.style.display = 'none';
     if(workspace) workspace.style.display = 'block';
     
-    // Reset crop button state
     if(cropBtn) {
         cropBtn.disabled = true;
         cropBtn.innerText = "Crop files! »";
@@ -99,6 +98,9 @@ async function renderAllPages() {
   const canvas = document.createElement('canvas');
   canvas.width = viewport.width;
   canvas.height = viewport.height;
+  // Prevent mobile screen scrolling when trying to draw on the canvas
+  canvas.style.touchAction = 'none'; 
+  
   const ctx = canvas.getContext('2d');
   await page.render({ canvasContext: ctx, viewport }).promise;
 
@@ -109,13 +111,17 @@ async function renderAllPages() {
   setupCropEvents(wrapper, canvas);
 }
 
-// ===== Crop Selection Logic =====
+// ===== Crop Selection Logic (Mouse + Mobile Touch) =====
 function setupCropEvents(wrapper, canvas) {
-  canvas.addEventListener('mousedown', (e) => {
-    if (e.button !== 0) return;
+  const startAction = (e) => {
+    if (e.type === 'mousedown' && e.button !== 0) return;
+    
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
     if (state.cropBox && isInsideBox(x, y, state.cropBox)) {
       state.isDragging = true;
@@ -136,10 +142,16 @@ function setupCropEvents(wrapper, canvas) {
 
     state.currentBox = createCropBoxEl(wrapper);
     updateBox(state.currentBox, x, y, 0, 0);
-  });
+  };
+
+  canvas.addEventListener('mousedown', startAction);
+  canvas.addEventListener('touchstart', startAction, { passive: false });
 
   document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('touchmove', onMouseMove, { passive: false });
+
   document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('touchend', onMouseUp);
 }
 
 function onMouseMove(e) {
@@ -147,11 +159,17 @@ function onMouseMove(e) {
   const pageData = state.pages[0];
   if (!pageData) return;
 
+  // Stop page scrolling on mobile while drawing crop box
+  if(e.type === 'touchmove' && e.cancelable) {
+      e.preventDefault(); 
+  }
+
+  let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+  let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+  
   const rect = pageData.canvas.getBoundingClientRect();
-  let x = e.clientX - rect.left;
-  let y = e.clientY - rect.top;
-  x = Math.max(0, Math.min(x, pageData.canvas.width));
-  y = Math.max(0, Math.min(y, pageData.canvas.height));
+  let x = Math.max(0, Math.min(clientX - rect.left, pageData.canvas.width));
+  let y = Math.max(0, Math.min(clientY - rect.top, pageData.canvas.height));
 
   if (state.isDrawing) {
     const w = x - state.startX;
@@ -169,7 +187,7 @@ function onMouseMove(e) {
     state.cropBox = { x: newX, y: newY, w: state.cropBox.w, h: state.cropBox.h };
     updateCoordsDisplay(newX, newY, state.cropBox.w, state.cropBox.h);
   } else if (state.isResizing && state.currentBox) {
-    handleResize(e, pageData);
+    handleResize(x, y, pageData);
   }
 }
 
@@ -185,7 +203,7 @@ function onMouseUp() {
       if (box.w > 5 && box.h > 5) {
         state.cropBox = box;
         addResizeHandles(state.currentBox);
-        if(cropBtn) cropBtn.disabled = false; // Enable download button
+        if(cropBtn) cropBtn.disabled = false;
       } else {
         state.currentBox.remove();
         state.cropBox = null;
@@ -199,12 +217,11 @@ function onMouseUp() {
   state.resizeHandle = null;
 }
 
-function handleResize(e, pageData) {
+function handleResize(mouseX, mouseY, pageData) {
   if (!state.cropBox || !state.resizeHandle) return;
-  const rect = pageData.canvas.getBoundingClientRect();
-  let x = Math.max(0, Math.min(e.clientX - rect.left, pageData.canvas.width));
-  let y = Math.max(0, Math.min(e.clientY - rect.top, pageData.canvas.height));
-
+  
+  let x = mouseX;
+  let y = mouseY;
   let { x: bx, y: by, w, h } = state.cropBox;
   const handle = state.resizeHandle;
 
@@ -249,13 +266,16 @@ function addResizeHandles(boxEl) {
     const handle = document.createElement('div');
     handle.className = `handle ${h}`;
     handle.dataset.handle = h;
-    handle.addEventListener('mousedown', (e) => {
+    
+    const startResize = (e) => {
       e.stopPropagation();
-      e.preventDefault();
       state.isResizing = true;
       state.resizeHandle = h;
       state.currentBox = boxEl;
-    });
+    };
+
+    handle.addEventListener('mousedown', startResize);
+    handle.addEventListener('touchstart', startResize, { passive: false });
     boxEl.appendChild(handle);
   });
 }
@@ -355,13 +375,11 @@ if(cropBtn) {
 // ===== Reset (Start Over) =====
 if(resetBtn) {
     resetBtn.addEventListener('click', () => {
-      // Clear data
       state.pdfDoc = null;
       state.pdfBytes = null;
       state.pages = [];
       state.cropBox = null;
       
-      // Reset UI
       if(pagesContainer) pagesContainer.innerHTML = '';
       if(workspace) workspace.style.display = 'none';
       if(uploadZone) uploadZone.style.display = 'block';
@@ -372,7 +390,6 @@ if(resetBtn) {
       }
       if(cropCoords) cropCoords.textContent = '';
       
-      // Reset Zoom
       state.scale = 1;
       if(zoomRange) zoomRange.value = 1;
       if(zoomValue) zoomValue.textContent = '100%';
