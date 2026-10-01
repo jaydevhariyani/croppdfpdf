@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlock PDF - Remove PDF Password Online Free</title>
+  <meta name="description" content="Free online tool to unlock PDF files. Remove passwords and restrictions from your secured PDFs instantly in your browser.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+  <script src="https://pl31303384.profitableratecpmnetwork.com/77/9e/eb/779eebc6191823cbfc436bf0c073f1c1.js"></script>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fa-solid fa-file-pdf"></i></span>
+        <span class="logo-text">CropPDFPDF.com</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="pdf-resizer-menu">
+    <a href="merge.html">Merge PDF</a>
+    <a href="split.html">Split PDF</a>
+    <a href="resize.html">Resize PDF</a>
+    <a href="convert.html">Convert PDF</a>
+    <a href="index.html">Crop PDF</a>
+    <a href="unlock.html" class="active">Unlock PDF</a>
+    <a href="extract.html">Extract Images</a>
+  </div>
+
+  <main class="container tool-section">
+    <h1 class="page-title">Unlock PDF file</h1>
+
+    <div class="toolbar-actions">
+      <div class="action-btn active-tool"><i class="fa-solid fa-lock-open"></i><br>Unlock</div>
+      <div class="action-btn"><i class="fa-solid fa-shield-halved"></i><br>Protect</div>
+      <div class="action-btn"><i class="fa-solid fa-images"></i><br>Extract</div>
+      <div class="action-btn"><i class="fa-solid fa-crop-simple"></i><br>Crop</div>
+    </div>
+
+    <div id="uploadZone">
+      <div class="upload-zone">
+        <h2>Choose a password-protected PDF to unlock</h2>
+        <div style="margin: 30px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <button class="btn btn-primary" onclick="document.getElementById('pdfInput').click()">Choose file</button>
+          <span style="font-size: 14px; opacity: 0.8;">No file chosen</span>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf" hidden>
+      </div>
+    </div>
+
+    <div class="workspace" id="workspace" style="display:none; max-width: 800px; margin: 0 auto;">
+      <div class="workspace-header">
+        <div>
+          <i class="fa-solid fa-lock" style="font-size: 20px; color: #dc3545; vertical-align: middle;"></i>
+          <span class="file-name" id="fileName" style="margin-left: 10px; font-weight: bold;">document.pdf</span>
+        </div>
+        <button class="btn btn-primary" onclick="location.reload()" style="font-size: 12px; padding: 5px 10px;"><i class="fa-solid fa-rotate-left"></i> Start Over</button>
+      </div>
+
+      <div class="action-panel" style="text-align: left;">
+        <p style="font-weight: bold; color: #4a5c88; margin-bottom: 15px;">Enter the current password to remove it permanently:</p>
+        
+        <div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px;">
+          <input type="password" id="pdfPassword" placeholder="Enter PDF Password" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 3px; font-size: 16px;">
+        </div>
+
+        <button class="big-action-btn" id="unlockBtn" style="margin: 0 auto;">Unlock PDF! »</button>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="seo-content">
+      <h2>Free Online PDF Unlocked</h2>
+      <p>Remove passwords and security restrictions from your PDF files permanently. If you receive password-protected bank statements, credit card bills, or official documents (like Aadhar cards) and want to save a copy without having to type the password every single time, our Unlock PDF tool is exactly what you need.</p>
+
+      <h3>How to Remove Password from PDF</h3>
+      <ol>
+        <li>Click "Choose file" and upload your secured PDF document.</li>
+        <li>Enter the current correct password in the text box.</li>
+        <li>Click "Unlock PDF!". Our tool will instantly generate a new version of your file with all passwords and encryption permanently removed.</li>
+      </ol>
+
+      <h3>Frequently Asked Questions</h3>
+      <div style="margin-top: 20px; border-left: 3px solid #4a5c88; padding-left: 15px; background: #f9f9f9; padding-top: 15px; padding-bottom: 15px;">
+        <p><b>Can this tool hack or crack a PDF if I forgot the password?</b><br>
+        No. This tool is designed to remove the password permanently for convenience, but you MUST know the current password to unlock it. It does not hack or guess lost passwords.</p>
+        
+        <p style="margin-top: 15px;"><b>Is it safe to upload my bank statements?</b><br>
+        100% safe. This tool processes the unlocking directly inside your browser. Your sensitive files and your password are NEVER sent to our servers.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© croppdfpdf.com, 2026</div>
+      <div class="footer-links">
+        <a href="unlock.html">Unlock PDF</a>
+        <a href="index.html">Crop PDF</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const pdfInput = document.getElementById('pdfInput');
+    const uploadZone = document.getElementById('uploadZone');
+    const workspace = document.getElementById('workspace');
+    const fileName = document.getElementById('fileName');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const pdfPassword = document.getElementById('pdfPassword');
+    let fileBytes = null;
+
+    pdfInput.addEventListener('change', async (e) => {
+      if(e.target.files.length > 0) {
+        fileName.innerText = e.target.files[0].name;
+        fileBytes = await e.target.files[0].arrayBuffer();
+        uploadZone.style.display = 'none';
+        workspace.style.display = 'block';
+      }
+    });
+
+    unlockBtn.addEventListener('click', async () => {
+      const pass = pdfPassword.value;
+      if(!pass) {
+          alert("Please enter the password first.");
+          return;
+      }
+      unlockBtn.disabled = true;
+      unlockBtn.innerText = "Unlocking...";
+
+      try {
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.load(fileBytes, { password: pass });
+        const unlockedBytes = await pdfDoc.save(); // Saves without encryption
+        
+        const blob = new Blob([unlockedBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName.innerText.replace('.pdf', '') + '_unlocked.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        unlockBtn.innerText = "Unlock PDF! »";
+        unlockBtn.disabled = false;
+      } catch (error) {
+        alert("Incorrect password or invalid PDF! Please try again.");
+        unlockBtn.innerText = "Unlock PDF! »";
+        unlockBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
