@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barcode & Product Tag Generator - CropPDFPDF</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Barcode & Image Download Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <style>
+    .barcode-container { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 20px; }
+    .form-section { flex: 1; min-width: 300px; background: white; padding: 25px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .preview-section { flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center; }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 14px; font-weight: bold; color: #4b5563; margin-bottom: 5px; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
+    
+    /* Tag Design Matching Your Image */
+    .product-tag { width: 280px; background: #fdfdfd; padding: 25px 20px; border: 1px solid #ddd; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); font-family: Arial, sans-serif; color: #111; position: relative; }
+    .tag-hole { width: 12px; height: 12px; background: #f4f7fd; border: 1px solid #ccc; border-radius: 50%; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+    .tag-row { display: flex; font-size: 11px; margin-bottom: 6px; font-weight: bold; }
+    .tag-label { width: 100px; }
+    .tag-value { flex: 1; }
+    .tag-size-large { position: absolute; top: 25px; right: 20px; font-size: 24px; font-weight: 900; }
+    .mrp-section { margin-top: 15px; font-size: 12px; font-weight: bold; }
+    .mrp-price { font-size: 18px; font-weight: 900; }
+    .mfg-info { font-size: 9px; margin-top: 15px; line-height: 1.4; font-weight: bold; }
+    .barcode-area { text-align: center; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fa-solid fa-file-pdf"></i></span>
+        <span class="logo-text">CropPDFPDF.com</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Menu -->
+  <div class="pdf-resizer-menu">
+    <a href="index.html">Crop PDF</a>
+    <a href="merge.html">Merge PDF</a>
+    <a href="resize.html">Resize PDF</a>
+    <a href="barcode.html" class="active">Barcode Generator</a>
+  </div>
+
+  <main class="container tool-section">
+    <h1 class="page-title">Barcode & Product Tag Generator</h1>
+    <p style="text-align: center; color: #666;">Enter your product details below to instantly generate and download a printable label.</p>
+
+    <div class="barcode-container">
+      <!-- Input Form -->
+      <div class="form-section">
+        <div class="form-group"><label>Company Name</label><input type="text" id="in-company" value="BIOWORLD MERCHANDISING INDIA PVT. LTD." onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Company Address</label><input type="text" id="in-address" value="307-309 PARK CENTRA, SECTOR 30, GURGAON, HARYANA, INDIA 122001" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Product Name</label><input type="text" id="in-product" value="TSHIRT" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Colour</label><input type="text" id="in-colour" value="NAUTICAL BLUE" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Style Code</label><input type="text" id="in-style" value="STY-20-21-005268" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Size (e.g. XXL)</label><input type="text" id="in-size-txt" value="XXL" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Dimensions (e.g. 58.3 cm)</label><input type="text" id="in-dim" value="58.3 cm" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>M.R.P. (₹)</label><input type="text" id="in-mrp" value="999.00" onkeyup="updateTag()"></div>
+        <div class="form-group"><label>Barcode Number (12-13 digits)</label><input type="text" id="in-barcode" value="8905030502918" onkeyup="updateTag()" maxlength="13"></div>
+      </div>
+
+      <!-- Live Preview -->
+      <div class="preview-section">
+        <div class="product-tag" id="printable-tag">
+          <div class="tag-hole"></div>
+          
+          <div style="margin-top: 15px;">
+            <div class="tag-row"><div class="tag-label">PRODUCT</div><div>: <span id="out-product">TSHIRT</span></div></div>
+            <div class="tag-row"><div class="tag-label">COLOUR</div><div>: <span id="out-colour">NAUTICAL BLUE</span></div></div>
+            <div class="tag-row"><div class="tag-label">NET QUANTITY</div><div>: 1N</div></div>
+            <div class="tag-row"><div class="tag-label">STYLE</div><div>: <span id="out-style">STY-20-21-005268</span></div></div>
+            <div class="tag-row"><div class="tag-label">SIZE</div><div>: <span id="out-dim">58.3 cm</span></div></div>
+            
+            <div class="tag-size-large" id="out-size-txt">XXL</div>
+          </div>
+
+          <div class="mrp-section">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div>M.R.P.<br><span style="font-size: 8px;">(inclusive of all taxes)</span></div>
+                <div class="mrp-price">: ₹ <span id="out-mrp">999.00</span></div>
+            </div>
+            <div style="font-size: 10px; margin-top: 5px;">Month & Year of Manufacture : <span id="out-date"></span></div>
+          </div>
+
+          <div class="mfg-info">
+            MANUFACTURED / LICENSED & MARKETED BY<br>
+            <span id="out-company" style="font-weight: normal;">BIOWORLD MERCHANDISING INDIA PVT. LTD.</span><br>
+            <span id="out-address" style="font-weight: normal;">307-309 PARK CENTRA, SECTOR 30, GURGAON, HARYANA, INDIA 122001</span>
+            <br><br>
+            FOR CUSTOMER COMPLAINTS<br>
+            <span style="font-weight: normal;">Please contact our customer care cell at the address mentioned above.</span>
+            <br><br>Made In India<br>
+            <span style="font-size: 11px; font-weight: 900;">FREE AUTHORITY™</span>
+          </div>
+
+          <div class="barcode-area">
+            <svg id="barcode-svg"></svg>
+          </div>
+        </div>
+
+        <button class="big-action-btn" onclick="downloadTag()" style="margin-top: 25px; width: 280px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <i class="fa-solid fa-download"></i> Download Tag as Image
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Set current month/year automatically
+    const dateOptions = { month: 'long', year: 'numeric' };
+    document.getElementById('out-date').innerText = new Date().toLocaleDateString('en-US', dateOptions);
+
+    function updateTag() {
+      // Company Details
+      document.getElementById('out-company').innerText = document.getElementById('in-company').value;
+      document.getElementById('out-address').innerText = document.getElementById('in-address').value;
+      
+      // Product Details
+      document.getElementById('out-product').innerText = document.getElementById('in-product').value;
+      document.getElementById('out-colour').innerText = document.getElementById('in-colour').value;
+      document.getElementById('out-style').innerText = document.getElementById('in-style').value;
+      document.getElementById('out-size-txt').innerText = document.getElementById('in-size-txt').value;
+      document.getElementById('out-dim').innerText = document.getElementById('in-dim').value;
+      document.getElementById('out-mrp').innerText = document.getElementById('in-mrp').value;
+      
+      let barcodeVal = document.getElementById('in-barcode').value || "000000000000";
+      
+      // Generate Barcode
+      JsBarcode("#barcode-svg", barcodeVal, {
+        format: "CODE128",
+        width: 1.8,
+        height: 45,
+        displayValue: true,
+        fontSize: 14,
+        margin: 0,
+        font: "Arial"
+      });
+    }
+
+    function downloadTag() {
+      const tagElement = document.getElementById('printable-tag');
+      html2canvas(tagElement, { scale: 3 }).then(canvas => {
+        let link = document.createElement('a');
+        link.download = 'product_tag_' + document.getElementById('in-product').value + '.png';
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+
+    // Init on load
+    window.onload = updateTag;
+  </script>
+</body>
+</html>
