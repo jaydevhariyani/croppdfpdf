@@ -18,7 +18,7 @@
     
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; font-size: 14px; font-weight: bold; color: #4b5563; margin-bottom: 5px; }
-    .form-group input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
     
     /* Tag Design Matching Your Image */
     .product-tag { width: 280px; background: #fdfdfd; padding: 25px 20px; border: 1px solid #ddd; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); font-family: Arial, sans-serif; color: #111; position: relative; }
@@ -60,15 +60,24 @@
     <div class="barcode-container">
       <!-- Input Form -->
       <div class="form-section">
-        <div class="form-group"><label>Company Name</label><input type="text" id="in-company" value="BIOWORLD MERCHANDISING INDIA PVT. LTD." onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Company Address</label><input type="text" id="in-address" value="307-309 PARK CENTRA, SECTOR 30, GURGAON, HARYANA, INDIA 122001" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Product Name</label><input type="text" id="in-product" value="TSHIRT" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Colour</label><input type="text" id="in-colour" value="NAUTICAL BLUE" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Style Code</label><input type="text" id="in-style" value="STY-20-21-005268" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Size (e.g. XXL)</label><input type="text" id="in-size-txt" value="XXL" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Dimensions (e.g. 58.3 cm)</label><input type="text" id="in-dim" value="58.3 cm" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>M.R.P. (₹)</label><input type="text" id="in-mrp" value="999.00" onkeyup="updateTag()"></div>
-        <div class="form-group"><label>Barcode Number (12-13 digits)</label><input type="text" id="in-barcode" value="8905030502918" onkeyup="updateTag()" maxlength="13"></div>
+        <div class="form-group"><label>Company Name</label><input type="text" id="in-company" value="BIOWORLD MERCHANDISING INDIA PVT. LTD." oninput="updateTag()"></div>
+        <div class="form-group"><label>Company Address</label><input type="text" id="in-address" value="307-309 PARK CENTRA, SECTOR 30, GURGAON, HARYANA, INDIA 122001" oninput="updateTag()"></div>
+        
+        <div class="form-group"><label>Product Name</label><input type="text" id="in-product" value="TSHIRT" oninput="updateTag()"></div>
+        <div class="form-group"><label>Colour</label><input type="text" id="in-colour" value="NAUTICAL BLUE" oninput="updateTag()"></div>
+        <div class="form-group"><label>Net Quantity</label><input type="text" id="in-qty" value="1N" oninput="updateTag()"></div>
+        <div class="form-group"><label>Style Code</label><input type="text" id="in-style" value="STY-20-21-005268" oninput="updateTag()"></div>
+        <div class="form-group"><label>Size (e.g. XXL)</label><input type="text" id="in-size-txt" value="XXL" oninput="updateTag()"></div>
+        <div class="form-group"><label>Dimensions (e.g. 58.3 cm)</label><input type="text" id="in-dim" value="58.3 cm" oninput="updateTag()"></div>
+        
+        <div class="form-group"><label>M.R.P. (₹)</label><input type="text" id="in-mrp" value="999.00" oninput="updateTag()"></div>
+        <div class="form-group"><label>Month & Year of Manufacture</label><input type="text" id="in-date" value="October 2026" oninput="updateTag()"></div>
+        
+        <div class="form-group"><label>Customer Complaints Info</label><textarea id="in-care" rows="3" oninput="updateTag()">Please contact our customer care cell at the address mentioned above.</textarea></div>
+        
+        <div class="form-group"><label>Country of Origin</label><input type="text" id="in-country" value="Made In India" oninput="updateTag()"></div>
+        <div class="form-group"><label>Brand / Trademark Name</label><input type="text" id="in-brand" value="FREE AUTHORITY™" oninput="updateTag()"></div>
+        <div class="form-group"><label>Barcode Number (12-13 digits)</label><input type="text" id="in-barcode" value="8905030502918" oninput="updateTag()" maxlength="13"></div>
       </div>
 
       <!-- Live Preview -->
@@ -79,7 +88,7 @@
           <div style="margin-top: 15px;">
             <div class="tag-row"><div class="tag-label">PRODUCT</div><div>: <span id="out-product">TSHIRT</span></div></div>
             <div class="tag-row"><div class="tag-label">COLOUR</div><div>: <span id="out-colour">NAUTICAL BLUE</span></div></div>
-            <div class="tag-row"><div class="tag-label">NET QUANTITY</div><div>: 1N</div></div>
+            <div class="tag-row"><div class="tag-label">NET QUANTITY</div><div>: <span id="out-qty">1N</span></div></div>
             <div class="tag-row"><div class="tag-label">STYLE</div><div>: <span id="out-style">STY-20-21-005268</span></div></div>
             <div class="tag-row"><div class="tag-label">SIZE</div><div>: <span id="out-dim">58.3 cm</span></div></div>
             
@@ -100,9 +109,9 @@
             <span id="out-address" style="font-weight: normal;">307-309 PARK CENTRA, SECTOR 30, GURGAON, HARYANA, INDIA 122001</span>
             <br><br>
             FOR CUSTOMER COMPLAINTS<br>
-            <span style="font-weight: normal;">Please contact our customer care cell at the address mentioned above.</span>
-            <br><br>Made In India<br>
-            <span style="font-size: 11px; font-weight: 900;">FREE AUTHORITY™</span>
+            <span id="out-care" style="font-weight: normal;">Please contact our customer care cell at the address mentioned above.</span>
+            <br><br><span id="out-country">Made In India</span><br>
+            <span id="out-brand" style="font-size: 11px; font-weight: 900;">FREE AUTHORITY™</span>
           </div>
 
           <div class="barcode-area">
@@ -118,10 +127,6 @@
   </main>
 
   <script>
-    // Set current month/year automatically
-    const dateOptions = { month: 'long', year: 'numeric' };
-    document.getElementById('out-date').innerText = new Date().toLocaleDateString('en-US', dateOptions);
-
     function updateTag() {
       // Company Details
       document.getElementById('out-company').innerText = document.getElementById('in-company').value;
@@ -130,10 +135,19 @@
       // Product Details
       document.getElementById('out-product').innerText = document.getElementById('in-product').value;
       document.getElementById('out-colour').innerText = document.getElementById('in-colour').value;
+      document.getElementById('out-qty').innerText = document.getElementById('in-qty').value;
       document.getElementById('out-style').innerText = document.getElementById('in-style').value;
       document.getElementById('out-size-txt').innerText = document.getElementById('in-size-txt').value;
       document.getElementById('out-dim').innerText = document.getElementById('in-dim').value;
+      
+      // Pricing & Dates
       document.getElementById('out-mrp').innerText = document.getElementById('in-mrp').value;
+      document.getElementById('out-date').innerText = document.getElementById('in-date').value;
+      
+      // Bottom Details
+      document.getElementById('out-care').innerText = document.getElementById('in-care').value;
+      document.getElementById('out-country').innerText = document.getElementById('in-country').value;
+      document.getElementById('out-brand').innerText = document.getElementById('in-brand').value;
       
       let barcodeVal = document.getElementById('in-barcode').value || "000000000000";
       
@@ -153,7 +167,8 @@
       const tagElement = document.getElementById('printable-tag');
       html2canvas(tagElement, { scale: 3 }).then(canvas => {
         let link = document.createElement('a');
-        link.download = 'product_tag_' + document.getElementById('in-product').value + '.png';
+        let prodName = document.getElementById('in-product').value || 'tag';
+        link.download = 'product_tag_' + prodName + '.png';
         link.href = canvas.toDataURL("image/png");
         link.click();
       });
