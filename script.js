@@ -311,6 +311,62 @@ document.getElementById('fitPageBtn')?.addEventListener('click', async () => {
   await renderAllPages();
 });
 
+// ===== Auto-Crop Logic for Ecommerce Labels =====
+function applyAutoCrop(type) {
+    if (!state.pdfDoc || !state.pages.length) {
+        alert("Please upload a PDF first.");
+        return;
+    }
+
+    const wrapper = state.pages[0].wrapper;
+    const canvas = state.pages[0].canvas;
+    
+    // Scale according to current zoom level
+    const currentScale = state.scale;
+
+    // A4 Size in points is roughly 595 x 842. We adjust based on platform standards.
+    let cropSettings = {}; 
+    
+    if(type === 'amazon') {
+        cropSettings = {x: 20, y: 20, w: 555, h: 400};
+    } else if(type === 'flipkart') {
+        cropSettings = {x: 30, y: 30, w: 535, h: 440};
+    } else if(type === 'meesho') {
+        cropSettings = {x: 15, y: 15, w: 565, h: 390};
+    }
+
+    // Apply the scale to the settings
+    const scaledX = cropSettings.x * currentScale;
+    const scaledY = cropSettings.y * currentScale;
+    const scaledW = cropSettings.w * currentScale;
+    const scaledH = cropSettings.h * currentScale;
+
+    // Remove old box if exists
+    const old = wrapper.querySelector('.crop-box');
+    if (old) old.remove();
+
+    // Create new selection box
+    state.currentBox = createCropBoxEl(wrapper);
+    updateBox(state.currentBox, scaledX, scaledY, scaledW, scaledH);
+    
+    // Save to state
+    state.cropBox = { x: scaledX, y: scaledY, w: scaledW, h: scaledH };
+    addResizeHandles(state.currentBox);
+    updateCoordsDisplay(scaledX, scaledY, scaledW, scaledH);
+    
+    // Enable crop button
+    if(cropBtn) cropBtn.disabled = false;
+    
+    // Optionally alert the user
+    // alert(type.toUpperCase() + " Auto-Crop Selected. Click 'Crop files!' to process.");
+}
+
+// Bind buttons to Auto-Crop Logic
+document.getElementById('cropAmazonBtn')?.addEventListener('click', () => applyAutoCrop('amazon'));
+document.getElementById('cropFlipkartBtn')?.addEventListener('click', () => applyAutoCrop('flipkart'));
+document.getElementById('cropMeeshoBtn')?.addEventListener('click', () => applyAutoCrop('meesho'));
+
+
 // ===== Crop & Download =====
 if(cropBtn) {
     cropBtn.addEventListener('click', async () => {
