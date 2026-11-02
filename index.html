@@ -126,6 +126,15 @@
           <span>Draw crop box on the document. The same area will be cropped from every page.</span>
           <div class="crop-coords" id="cropCoords"></div>
         </div>
+
+        <!-- NEW AUTO CROP BUTTONS START HERE -->
+        <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #4a5c88; margin-top: 20px;">Auto-Crop E-commerce Labels:</div>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button class="btn btn-sm" id="cropAmazonBtn" style="background: #ff9900; color: white; border:none; padding: 8px 15px; cursor: pointer; border-radius: 5px;"><i class="fa-brands fa-amazon"></i> Amazon</button>
+            <button class="btn btn-sm" id="cropFlipkartBtn" style="background: #2874f0; color: white; border:none; padding: 8px 15px; cursor: pointer; border-radius: 5px;"><i class="fa-solid fa-cart-shopping"></i> Flipkart</button>
+            <button class="btn btn-sm" id="cropMeeshoBtn" style="background: #f43397; color: white; border:none; padding: 8px 15px; cursor: pointer; border-radius: 5px;"><i class="fa-solid fa-bag-shopping"></i> Meesho</button>
+        </div>
+        <!-- NEW AUTO CROP BUTTONS END HERE -->
         
         <button class="big-action-btn" id="cropBtn" disabled>Crop files! »</button>
       </div>
@@ -137,11 +146,15 @@
       <h2>Online PDF crop tool</h2>
       <p>Free and easy to use online tool for visual PDF document cropping / changing canvas size. With this tool, you can easily crop scans, Flipkart labels, Amazon labels, logos, and any other PDFs.</p>
       <p>You can crop the PDF to a selected area, to try and remove all margins automatically. You can also use PDF cropper to increase visible margins, for example, to add extra space for annotations.</p>
+      
+      <p>Whether you need to extract a specific section from a document, crop multiple pages to a uniform size, or simply trim white space to optimize your PDF for printing, our advanced online cropper handles it all in seconds. No software installation is required.</p>
+      <p>E-commerce sellers can greatly benefit from our tool. Quickly crop your shipping labels for Amazon, Flipkart, Meesho, or any other platform. Just upload the PDF, click the corresponding auto-crop button, and download a perfectly sized label that is ready to print directly onto your thermal printer. This saves valuable time and paper.</p>
 
       <h3>How to Crop a PDF</h3>
       <ol>
         <li>Upload your document. If you wish to upload multiple files simultaneously, please ensure that they are of the same size and margins.</li>
         <li>If you want to select the part of the document for cropping manually, mark it in the preview window and then choose the <i>Crop to selection</i> option.</li>
+        <li>For faster processing of shipping labels, use our one-click Auto-Crop buttons designed specifically for popular marketplaces.</li>
         <li>It is important to note that all pages in the processed documents will be cropped equally. If you require different parts of each page to be cropped, we recommend splitting the file before manually cropping each page.</li>
       </ol>
 
@@ -150,7 +163,7 @@
         <li><b>Crop to selection:</b> Visually select the area you want to keep using the interactive cropping tool.</li>
         <li><b>Label Cropping:</b> Use this PDF cropper to cut shipping labels, Flipkart labels, Meesho labels, and other e-commerce labels to the correct size. Upload your label PDF, use the visual crop tool to select just the label area, and download a perfectly sized label ready for printing.</li>
       </ul>
-      <p><i>All files are processed securely in your browser and automatically deleted within 1 hour of upload.</i></p>
+      <p><i>All files are processed securely in your browser and automatically deleted within 1 hour of upload. We prioritize your privacy and data security above all else.</i></p>
 
       <h3>Frequently Asked Questions</h3>
       <div style="margin-top: 20px; border-left: 3px solid #4a5c88; padding-left: 15px; background: #f9f9f9; padding-top: 15px; padding-bottom: 15px;">
@@ -159,6 +172,9 @@
         
         <p style="margin-top: 15px;"><b>Does cropping apply to all pages in the PDF?</b><br>
         Yes. The same crop settings are applied to all pages. If you need different crops for different pages, split the PDF first, crop individual pages, then merge them back together.</p>
+
+        <p style="margin-top: 15px;"><b>Are my documents safe when I use this tool?</b><br>
+        Absolutely. Your files are processed entirely within your web browser. We do not store your documents on our servers, ensuring your sensitive data remains private.</p>
       </div>
     </div>
   </main>
